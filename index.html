@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesor Normativo PH - Entrena Consulting</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-top: 5px solid #2c3e50; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .instruction { background: #e8eff1; padding: 15px; border-left: 5px solid #3498db; margin: 20px 0; }
+        button { background-color: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-size: 16px; transition: background 0.3s; }
+        button:hover { background-color: #219150; }
+        textarea { width: 100%; height: 150px; margin-top: 10px; border: 1px solid #ddd; padding: 10px; font-family: monospace; font-size: 13px; }
+        footer { margin-top: 30px; font-size: 12px; color: #7f8c8d; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Asesoría Normativa Ley 675</h1>
+    <p>Esta herramienta configura cualquier IA (Claude, ChatGPT o Copilot) para responder como un experto en <strong>Propiedad Horizontal y SST</strong>.</p>
+    
+    <div class="instruction">
+        <strong>Paso 1:</strong> Haz clic en el botón verde para copiar las instrucciones.<br>
+        <strong>Paso 2:</strong> Pégalas en el chat de Claude AI junto con la consulta del copropietario.
+    </div>
+
+    <button onclick="copyPrompt()">Copiar Mega-Prompt de SST</button>
+    
+    <textarea id="promptText" readonly>
+/* INICIO DEL BLOQUE DE CONTROL */
+ROL: Experto en Propiedad Horizontal Colombia (Ley 675 de 2001) y SG-SST (Res. 0312).
+BASE LEGAL: Ley 675/2001, Decreto 1072/2015, Res. 0312/2019.
+REGLA DE ORO: Priorizar seguridad de zonas comunes y responsabilidad civil del administrador (Art. 50 Ley 675).
+TAREA: Responder consultas de copropietarios con rigor legal y tono conciliador.
+/* FIN DEL BLOQUE DE CONTROL */
+
+Analiza la siguiente consulta basada en la normativa vigente colombiana:
+    </textarea>
+</div>
+
+<footer>
+    Propiedad de Entrena Consulting SAS - Especialistas en SST y PH
+</footer>
+
+<script>
+    function copyPrompt() {
+        var copyText = document.getElementById("promptText");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("¡Código copiado! Ahora pégalo en Claude AI.");
+    }
+</script>
+
+</body>
+</html>
