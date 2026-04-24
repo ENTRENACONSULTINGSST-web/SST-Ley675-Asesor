@@ -1,362 +1,172 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Investigación de Accidentes SG-SST | Decreto 1072 + Resolución 0312</title>
-  <!-- Tailwind + FontAwesome + SweetAlert2 -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
-    .step { transition: all 0.2s; }
-    .cause-card { background-color: #f9fafb; }
-    .border-sg-sst { border-left: 6px solid #1e40af; }
-  </style>
+<meta charset="UTF-8">
+<title>Investigación SST PRO Certificable</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </head>
-<body class="bg-gray-100 font-sans p-4 md:p-6">
 
-<div class="max-w-6xl mx-auto">
-  <!-- Encabezado normativo -->
-  <div class="text-center mb-6">
-    <div class="inline-flex items-center gap-2 bg-white shadow-sm rounded-full px-5 py-2">
-      <i class="fas fa-clipboard-list text-blue-700"></i>
-      <span class="font-semibold text-gray-700">Investigación de Accidentes de Trabajo</span>
-      <i class="fas fa-balance-scale text-gray-600"></i>
-    </div>
-    <p class="text-sm text-gray-600 mt-2">Base legal: Decreto 1072 de 2015 (Art. 2.2.4.6.16) – Resolución 0312 de 2019 (Estándar mínimo 1.1.3)<br>
-    <strong>Plazo máximo 15 días</strong> después del accidente. Debe incluir causas básicas e inmediatas, recomendaciones y plan de acción.</p>
-  </div>
+<body class="bg-gray-100 p-6">
 
-  <!-- Progreso -->
-  <div class="flex flex-wrap justify-center gap-2 mb-8">
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="1">1. Datos del suceso</div>
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="2">2. Causas inmediatas</div>
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="3">3. Causas básicas</div>
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="4">4. Análisis raíz</div>
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="5">5. Plan de acción</div>
-    <div class="step w-36 text-center py-2 rounded-full bg-gray-300 text-gray-800 font-medium" data-step="6">6. Informe final</div>
-  </div>
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow">
 
-  <!-- CONTENEDOR DE PASOS -->
-  <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-    <!-- STEP 1: DATOS DEL ACCIDENTE -->
-    <div id="step1" class="step-content p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-info-circle text-blue-600 mr-2"></i> Información obligatoria del accidente</h2>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div><label class="font-semibold">Fecha del accidente *</label><input type="date" id="fechaAcc" class="w-full border rounded p-2"></div>
-        <div><label class="font-semibold">Hora *</label><input type="time" id="horaAcc" class="w-full border rounded p-2"></div>
-        <div><label class="font-semibold">Lugar exacto (área, máquina, dirección)</label><input type="text" id="lugar" class="w-full border rounded p-2" placeholder="Ej. cuarto de bombas, escalera bloque B"></div>
-        <div><label class="font-semibold">Trabajador afectado (nombre, cargo, ARL)</label><input type="text" id="trabajador" class="w-full border rounded p-2"></div>
-        <div><label class="font-semibold">Empresa empleadora (o contratista)</label><input type="text" id="empresa" class="w-full border rounded p-2"></div>
-        <div><label class="font-semibold">Tipo de suceso</label>
-          <select id="tipoSuceso" class="w-full border rounded p-2">
-            <option>Accidente de trabajo con incapacidad</option>
-            <option>Accidente de trabajo sin incapacidad</option>
-            <option>Accidente leve (primeros auxilios)</option>
-            <option>Incidente peligroso (sin lesiones)</option>
-            <option>Enfermedad laboral (investigación especial)</option>
-          </select>
-        </div>
-        <div class="md:col-span-2"><label class="font-semibold">Descripción detallada del accidente (qué pasó, cómo, qué hacía, testigos)</label><textarea id="descripcionAcc" rows="3" class="w-full border rounded p-2" placeholder="Ej. El técnico de ascensores se resbaló al bajar de la escalera portátil, cayó desde 1.5m y se fracturó el brazo derecho. No había barandales de seguridad."></textarea></div>
-        <div class="md:col-span-2"><label class="font-semibold">Consecuencias (lesiones, días de incapacidad, daños materiales)</label><input type="text" id="consecuencias" class="w-full border rounded p-2"></div>
-      </div>
-      <div class="mt-6 flex justify-end"><button id="nextStep1" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold"><i class="fas fa-arrow-right"></i> Siguiente: Causas inmediatas</button></div>
-    </div>
+<h1 class="text-2xl font-bold mb-4">Investigación de Accidentes SG-SST</h1>
 
-    <!-- STEP 2: CAUSAS INMEDIATAS (Actos y condiciones subestándar) -->
-    <div id="step2" class="step-content hidden p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-bolt text-yellow-600 mr-2"></i> Causas inmediatas (Decreto 1072 Art. 2.2.4.6.16)</h2>
-      <p class="text-sm text-gray-600 mb-3">Las causas inmediatas pueden ser <strong>actos inseguros</strong> (comportamientos) o <strong>condiciones inseguras</strong> (físicas/ambientales). Documente al menos una de cada categoría si aplica.</p>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="border rounded-lg p-3 bg-gray-50">
-          <label class="font-bold block mb-2">Actos inseguros (comportamientos):</label>
-          <textarea id="actosInseguros" rows="3" class="w-full border rounded p-2" placeholder="Ej. No usar bloqueo de energía, trabajar sin arnés, exceso de velocidad, ignorar señalización"></textarea>
-        </div>
-        <div class="border rounded-lg p-3 bg-gray-50">
-          <label class="font-bold block mb-2">Condiciones inseguras (entorno/equipos):</label>
-          <textarea id="condicionesInseguras" rows="3" class="w-full border rounded p-2" placeholder="Ej. piso resbaloso, falta de protecciones en maquinaria, iluminación deficiente, ausencia de guardas"></textarea>
-        </div>
-      </div>
-      <div class="mt-6 flex justify-between"><button id="prevStep2" class="bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-arrow-left"></i> Atrás</button><button id="nextStep2" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente: Causas básicas <i class="fas fa-arrow-right"></i></button></div>
-    </div>
+<!-- ================= CONSECUTIVO ================= -->
+<div class="mb-4">
+<label class="font-semibold">Consecutivo:</label>
+<input id="consecutivo" class="border p-2 w-full" readonly>
+</div>
 
-    <!-- STEP 3: CAUSAS BÁSICAS (Factores personales y de gestión) -->
-    <div id="step3" class="step-content hidden p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-tree text-emerald-700 mr-2"></i> Causas básicas (raíz organizacional)</h2>
-      <p class="text-sm text-gray-600 mb-3">Factores que originaron las causas inmediatas: falta de entrenamiento, supervisión insuficiente, políticas deficientes, estándares inadecuados, etc.</p>
-      <div class="grid md:grid-cols-2 gap-5">
-        <div><label class="font-semibold">Factores personales (capacitación, habilidad, condición física/mental):</label><textarea id="factoresPersonales" rows="3" class="w-full border rounded p-2" placeholder="Ej. falta de entrenamiento en trabajo en alturas, fatiga, estrés"></textarea></div>
-        <div><label class="font-semibold">Factores de gestión (liderazgo, estándares, supervisión, recursos):</label><textarea id="factoresGestion" rows="3" class="w-full border rounded p-2" placeholder="Ej. ausencia de procedimiento de trabajo seguro, supervisión débil, no se realiza análisis de riesgo pre-tarea"></textarea></div>
-      </div>
-      <div class="flex justify-between mt-6"><button id="prevStep3" class="bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button id="nextStep3" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente: Análisis raíz (5 Porqués) <i class="fas fa-arrow-right"></i></button></div>
-    </div>
+<!-- ================= DATOS ================= -->
+<input id="fecha" type="date" class="border p-2 w-full mb-2">
+<input id="lugar" placeholder="Lugar" class="border p-2 w-full mb-2">
+<textarea id="descripcion" placeholder="Descripción del accidente" class="border p-2 w-full mb-3"></textarea>
 
-    <!-- STEP 4: 5 PORQUÉS + ESPINA DE PESCADO simplificada -->
-    <div id="step4" class="step-content hidden p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-question-circle text-purple-600 mr-2"></i> Análisis de Causa Raíz – Técnica de los 5 Porqués</h2>
-      <p class="text-sm mb-2">Partiendo de la causa inmediata más relevante, pregunte “¿por qué?” sucesivamente hasta llegar a la causa básica. Esto complementa el diagrama de Ishikawa (opcional).</p>
-      <div id="porquesContainer" class="space-y-3 bg-gray-50 p-4 rounded-lg">
-        <!-- JS generará 5 inputs -->
-      </div>
-      <div class="mt-5">
-        <label class="font-semibold">Diagrama de Ishikawa (Espina de Pescado) – opcional, pero recomendado. Enumere causas agrupadas:</label>
-        <textarea id="ishikawaText" rows="4" class="w-full border rounded p-2 mt-1" placeholder="Ej. Método: falta de procedimiento; Mano de obra: sin entrenamiento; Máquina: falta guardas; Medio ambiente: orden y aseo deficiente; Material: herramienta inadecuada; Medición: supervisión inexistente"></textarea>
-      </div>
-      <div class="flex justify-between mt-6"><button id="prevStep4" class="bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button id="nextStep4" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente: Plan de acción</button></div>
-    </div>
+<!-- ================= CAUSAS ================= -->
+<h2 class="font-bold mt-4">Causas</h2>
+<textarea id="actos" placeholder="Actos inseguros" class="border p-2 w-full mb-2"></textarea>
+<textarea id="condiciones" placeholder="Condiciones inseguras" class="border p-2 w-full mb-2"></textarea>
 
-    <!-- STEP 5: PLAN DE ACCIÓN (CORRECTIVO) -->
-    <div id="step5" class="step-content hidden p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-tasks text-indigo-600 mr-2"></i> Plan de acción – Acciones correctivas y fechas</h2>
-      <p class="text-sm text-gray-600 mb-3">Según Resolución 0312, toda investigación debe generar un plan de mejoramiento con responsables y plazos.</p>
-      <div id="accionesContainer" class="space-y-3">
-        <!-- Lista dinámica de acciones -->
-      </div>
-      <button id="addAccionBtn" class="mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-1 rounded-lg text-sm"><i class="fas fa-plus"></i> Agregar acción correctiva</button>
-      <div class="flex justify-between mt-6"><button id="prevStep5" class="bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button id="nextStep5" class="bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Generar Informe Final</button></div>
-    </div>
+<!-- ================= 5 PORQUES ================= -->
+<h2 class="font-bold mt-4">5 Porqués</h2>
+<div id="porques"></div>
 
-    <!-- STEP 6: INFORME FINAL -->
-    <div id="step6" class="step-content hidden p-6 md:p-8">
-      <h2 class="text-xl font-bold text-gray-800 border-b pb-2 mb-4"><i class="fas fa-file-pdf text-red-600 mr-2"></i> Informe de Investigación - Cumple Decreto 1072 y Res. 0312</h2>
-      <div id="informeFinal" class="bg-white border border-gray-300 rounded-lg p-5 text-sm space-y-4 overflow-auto max-h-[70vh]">
-        <!-- Se llena con JS -->
-      </div>
-      <div class="flex gap-3 mt-6 flex-wrap justify-between">
-        <button id="exportarInformeBtn" class="bg-green-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-download"></i> Exportar a texto (Informe)</button>
-        <button id="resetBtn" class="bg-red-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-sync-alt"></i> Nueva investigación</button>
-        <button id="prevStep6" class="bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-edit"></i> Editar datos</button>
-      </div>
-    </div>
-  </div>
-  <div class="text-center text-xs text-gray-500 mt-5">
-    <i class="fas fa-check-circle text-green-600"></i> Conforme a la normativa colombiana: Investigación dentro de los 15 días, causas inmediatas + básicas, plan de acción. Anexar a la matriz de requisitos legales y al SG-SST.
-  </div>
+<!-- ================= PLAN ACCION ================= -->
+<h2 class="font-bold mt-4">Plan de Acción</h2>
+<div id="acciones"></div>
+<button onclick="addAccion()" class="bg-blue-600 text-white px-3 py-1 mt-2">+ Acción</button>
+
+<!-- ================= FIRMA ================= -->
+<h2 class="font-bold mt-4">Firma Investigador</h2>
+<canvas id="firma" width="400" height="150" class="border"></canvas>
+<br>
+<button onclick="limpiarFirma()" class="bg-gray-500 text-white px-2 py-1 mt-1">Limpiar</button>
+
+<!-- ================= BOTONES ================= -->
+<div class="mt-6 flex gap-3">
+<button onclick="generarPDF()" class="bg-green-600 text-white px-4 py-2">Generar PDF</button>
+</div>
+
+<!-- ================= INFORME ================= -->
+<div id="reporte" class="mt-6 bg-white p-4 border"></div>
+
 </div>
 
 <script>
-  // ---------- ESTADO GLOBAL ----------
-  let investigation = {
-    basico: { fecha: "", hora: "", lugar: "", trabajador: "", empresa: "", tipo: "", descripcion: "", consecuencias: "" },
-    causasInmediatas: { actos: "", condiciones: "" },
-    causasBasicas: { personales: "", gestion: "" },
-    cincoPorques: ["", "", "", "", ""],
-    ishikawa: "",
-    acciones: []  // array de { descripcion, responsable, fecha }
-  };
 
-  // Para control de steps
-  let currentStep = 1;
-  const steps = [1,2,3,4,5,6];
-  const stepDivs = {
-    1: document.getElementById("step1"),
-    2: document.getElementById("step2"),
-    3: document.getElementById("step3"),
-    4: document.getElementById("step4"),
-    5: document.getElementById("step5"),
-    6: document.getElementById("step6")
-  };
-  const indicators = document.querySelectorAll(".step");
+// ================= CONSECUTIVO =================
+let cons = localStorage.getItem("consecutivo") || 1;
+document.getElementById("consecutivo").value = "INV-" + cons;
 
-  function updateStepUI() {
-    Object.keys(stepDivs).forEach(step => stepDivs[step].classList.add("hidden"));
-    stepDivs[currentStep].classList.remove("hidden");
-    indicators.forEach((ind, idx) => {
-      const stepNum = idx+1;
-      ind.classList.remove("bg-blue-700", "text-white", "bg-gray-300", "text-gray-800", "bg-green-500");
-      if (stepNum === currentStep) ind.classList.add("bg-blue-700", "text-white");
-      else if (stepNum < currentStep) ind.classList.add("bg-green-500", "text-white");
-      else ind.classList.add("bg-gray-300", "text-gray-800");
-    });
-  }
+// ================= 5 PORQUES =================
+for(let i=1;i<=5;i++){
+document.getElementById("porques").innerHTML += 
+`<input id="p${i}" placeholder="${i}° porqué" class="border p-2 w-full mt-1">`;
+}
 
-  // Capturar datos de cada paso antes de avanzar
-  function grabStep1() {
-    investigation.basico = {
-      fecha: document.getElementById("fechaAcc").value,
-      hora: document.getElementById("horaAcc").value,
-      lugar: document.getElementById("lugar").value,
-      trabajador: document.getElementById("trabajador").value,
-      empresa: document.getElementById("empresa").value,
-      tipo: document.getElementById("tipoSuceso").value,
-      descripcion: document.getElementById("descripcionAcc").value,
-      consecuencias: document.getElementById("consecuencias").value
-    };
-    if (!investigation.basico.fecha || !investigation.basico.descripcion) {
-      Swal.fire("Datos incompletos", "La fecha y descripción del accidente son obligatorias", "warning");
-      return false;
-    }
-    return true;
-  }
-  function grabStep2() {
-    investigation.causasInmediatas.actos = document.getElementById("actosInseguros").value;
-    investigation.causasInmediatas.condiciones = document.getElementById("condicionesInseguras").value;
-    return true;
-  }
-  function grabStep3() {
-    investigation.causasBasicas.personales = document.getElementById("factoresPersonales").value;
-    investigation.causasBasicas.gestion = document.getElementById("factoresGestion").value;
-    return true;
-  }
-  function grabStep4() {
-    // capturar 5 porqués
-    for (let i=0;i<5;i++) {
-      let input = document.getElementById(`why${i+1}`);
-      if (input) investigation.cincoPorques[i] = input.value;
-    }
-    investigation.ishikawa = document.getElementById("ishikawaText").value;
-    return true;
-  }
-  function grabStep5() {
-    // acciones ya están en el array (se actualiza con los botones)
-    return true;
-  }
+// ================= PLAN ACCION =================
+let acciones = [];
 
-  function render5Porques() {
-    const container = document.getElementById("porquesContainer");
-    let html = `<div class="font-medium mb-2">Causa inmediata seleccionada (puede ser la principal):</div>
-      <input type="text" id="causaPartida" class="w-full border p-2 rounded mb-4" placeholder="Ej. El trabajador no usó el sistema de bloqueo" value="${investigation.cincoPorques.length? "":""}">`;
-    for (let i=1;i<=5;i++) {
-      html += `<div><label class="block font-medium">${i}° ¿Por qué? (${i===1?"partiendo de la causa inmediata": "de la respuesta anterior"})</label>
-      <textarea id="why${i}" rows="2" class="w-full border rounded p-2">${investigation.cincoPorques[i-1] || ""}</textarea></div>`;
-    }
-    container.innerHTML = html;
-    // Si ya teníamos una causa base en la primera iteración, se puede cargar
-    if (investigation.cincoPorques[0] && document.getElementById("causaPartida")) {
-      // No hay almacenamiento separado para causaPartida; se puede usar el primer porqué como referencia, pero dejamos opcional.
-    }
-  }
+function addAccion(){
+acciones.push({desc:"",resp:"",fecha:"",estado:"Pendiente"});
+renderAcciones();
+}
 
-  // Lista de acciones dinámica
-  function renderAcciones() {
-    const container = document.getElementById("accionesContainer");
-    if (!container) return;
-    container.innerHTML = "";
-    investigation.acciones.forEach((acc, idx) => {
-      const div = document.createElement("div");
-      div.className = "bg-gray-100 p-3 rounded-lg border flex flex-wrap gap-2 items-center";
-      div.innerHTML = `
-        <div class="flex-1"><input type="text" placeholder="Acción correctiva" value="${escapeHtml(acc.descripcion)}" class="w-full p-1 border rounded acc-desc-${idx}"></div>
-        <div class="w-40"><input type="text" placeholder="Responsable" value="${escapeHtml(acc.responsable)}" class="w-full p-1 border rounded acc-resp-${idx}"></div>
-        <div class="w-36"><input type="date" value="${acc.fecha}" class="w-full p-1 border rounded acc-fecha-${idx}"></div>
-        <button class="removeAccion text-red-600" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
-      `;
-      container.appendChild(div);
-    });
-    // Agregar listeners para actualizar el array
-    investigation.acciones.forEach((_, idx) => {
-      const descInput = document.querySelector(`.acc-desc-${idx}`);
-      const respInput = document.querySelector(`.acc-resp-${idx}`);
-      const fechaInput = document.querySelector(`.acc-fecha-${idx}`);
-      if(descInput) descInput.addEventListener("change", (e) => investigation.acciones[idx].descripcion = e.target.value);
-      if(respInput) respInput.addEventListener("change", (e) => investigation.acciones[idx].responsable = e.target.value);
-      if(fechaInput) fechaInput.addEventListener("change", (e) => investigation.acciones[idx].fecha = e.target.value);
-    });
-    document.querySelectorAll(".removeAccion").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const idx = parseInt(btn.getAttribute("data-idx"));
-        investigation.acciones.splice(idx,1);
-        renderAcciones();
-      });
-    });
-  }
+function renderAcciones(){
+let html="";
+acciones.forEach((a,i)=>{
+html+=`
+<div class="grid grid-cols-4 gap-2 mt-2">
+<input placeholder="Acción" onchange="acciones[${i}].desc=this.value" class="border p-1">
+<input placeholder="Responsable" onchange="acciones[${i}].resp=this.value" class="border p-1">
+<input type="date" onchange="acciones[${i}].fecha=this.value" class="border p-1">
+<select onchange="acciones[${i}].estado=this.value">
+<option>Pendiente</option><option>En proceso</option><option>Cerrado</option>
+</select>
+</div>`;
+});
+document.getElementById("acciones").innerHTML=html;
+}
 
-  function addAccion() {
-    investigation.acciones.push({ descripcion: "", responsable: "", fecha: "" });
-    renderAcciones();
-  }
+// ================= FIRMA =================
+let canvas = document.getElementById("firma");
+let ctx = canvas.getContext("2d");
+let dibujando=false;
 
-  // Generar informe completo
-  function generarInforme() {
-    const b = investigation.basico;
-    const causas = `
-      <strong>Causas inmediatas:</strong><br>
-      Actos inseguros: ${investigation.causasInmediatas.actos || "No reportados"}<br>
-      Condiciones inseguras: ${investigation.causasInmediatas.condiciones || "No reportadas"}<br>
-      <strong>Causas básicas:</strong><br>
-      Factores personales: ${investigation.causasBasicas.personales || "No identificados"}<br>
-      Factores de gestión: ${investigation.causasBasicas.gestion || "No identificados"}
-    `;
-    const cincoPorquesHtml = investigation.cincoPorques.map((p,i) => `<li><strong>${i+1}° Porqué:</strong> ${p || "No definido"}</li>`).join("");
-    const ishikawaHtml = investigation.ishikawa ? `<p><strong>Diagrama de Ishikawa (resumen):</strong><br>${investigation.ishikawa}</p>` : "";
-    const accionesHtml = investigation.acciones.map(a => `<li>📌 ${escapeHtml(a.descripcion)} - Responsable: ${escapeHtml(a.responsable)} - Fecha límite: ${a.fecha || "No definida"}</li>`).join("");
-    const fechaHoy = new Date().toLocaleDateString('es-CO');
-    const dentroPlazo = (()=>{
-      if(!b.fecha) return "No se pudo verificar";
-      const fechaAcc = new Date(b.fecha);
-      const hoy = new Date();
-      const diff = (hoy - fechaAcc) / (1000*3600*24);
-      return diff <= 15 ? "Cumple (dentro de los 15 días reglamentarios)" : "FUERA DE PLAZO (máximo 15 días según Decreto 1072)";
-    })();
+canvas.onmousedown=()=>dibujando=true;
+canvas.onmouseup=()=>dibujando=false;
+canvas.onmousemove=e=>{
+if(!dibujando)return;
+ctx.lineTo(e.offsetX,e.offsetY);
+ctx.stroke();
+};
 
-    return `
-      <div class="border-sg-sst pl-4 space-y-4">
-        <div><i class="fas fa-building"></i> <strong>INFORME DE INVESTIGACIÓN DE ACCIDENTE DE TRABAJO</strong><br>
-        Conforme al Decreto 1072 de 2015 Art. 2.2.4.6.16 y Resolución 0312 de 2019 - Estándar Mínimo SG-SST</div>
-        <div><strong>1. DATOS GENERALES</strong><br>
-        Fecha del accidente: ${b.fecha || "No registrada"} Hora: ${b.hora || "N/A"}<br>
-        Lugar: ${b.lugar || "No especificado"}<br>
-        Trabajador: ${b.trabajador || "Sin dato"} - Empresa: ${b.empresa || "Sin dato"}<br>
-        Tipo de suceso: ${b.tipo || "Accidente"}<br>
-        Descripción: ${b.descripcion || "Sin descripción"}<br>
-        Consecuencias: ${b.consecuencias || "No reportadas"}<br>
-        Fecha de esta investigación: ${fechaHoy} - ${dentroPlazo}</div>
-        
-        <div><strong>2. ANÁLISIS DE CAUSAS (Metodología integrada)</strong><br>${causas}</div>
-        <div><strong>3. TÉCNICA DE LOS 5 PORQUÉS</strong><br><ul>${cincoPorquesHtml}</ul></div>
-        ${ishikawaHtml}
-        <div><strong>4. CAUSA RAÍZ IDENTIFICADA</strong><br>${investigation.cincoPorques[4] ? investigation.cincoPorques[4] : "No se logró determinar completamente, requiere profundización."}</div>
-        <div><strong>5. PLAN DE ACCIÓN (CORRECTIVO Y PREVENTIVO)</strong><br><ul>${accionesHtml || "<li>No se establecieron acciones correctivas</li>"}</ul></div>
-        <div><strong>6. CONCLUSIONES Y RECOMENDACIONES</strong><br>
-        Basado en el análisis, se concluye que el accidente fue evitable. Las causas básicas de gestión (${investigation.causasBasicas.gestion || "no especificadas"}) deben ser intervenidas prioritariamente. Se recomienda: verificar el cumplimiento del plan de acción, realizar seguimiento a los contratistas, y socializar los resultados de esta investigación a todo el personal bajo el principio de prevención.</div>
-        <div class="text-xs text-gray-500 mt-3">Este informe debe ser anexado al SG-SST de la copropiedad y reportado a la ARL dentro de los 15 días siguientes al accidente.</div>
-      </div>
-    `;
-  }
+function limpiarFirma(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 
-  function mostrarInforme() {
-    const container = document.getElementById("informeFinal");
-    if (container) container.innerHTML = generarInforme();
-  }
+// ================= VALIDACION =================
+function validar(){
+for(let i=1;i<=5;i++){
+if(document.getElementById("p"+i).value.length<5){
+Swal.fire("Error","Completa los 5 porqués correctamente","warning");
+return false;
+}
+}
+return true;
+}
 
-  function exportarInforme() {
-    const contenido = document.getElementById("informeFinal").innerText;
-    const blob = new Blob([contenido], {type: "text/plain"});
-    const a = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    a.href = url;
-    a.download = `investigacion_accidente_${investigation.basico.fecha || "fecha"}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    Swal.fire("Exportado", "Informe descargado en formato texto plano, puede adjuntarlo a la matriz SG-SST", "success");
-  }
+// ================= GENERAR PDF =================
+function generarPDF(){
 
-  // Listeners de navegación
-  function init() {
-    updateStepUI();
-    render5Porques();
-    renderAcciones();
-    document.getElementById("nextStep1")?.addEventListener("click", () => { if(grabStep1()) { currentStep=2; updateStepUI(); } });
-    document.getElementById("prevStep2")?.addEventListener("click", () => { grabStep2(); currentStep=1; updateStepUI(); });
-    document.getElementById("nextStep2")?.addEventListener("click", () => { grabStep2(); currentStep=3; updateStepUI(); });
-    document.getElementById("prevStep3")?.addEventListener("click", () => { grabStep3(); currentStep=2; updateStepUI(); });
-    document.getElementById("nextStep3")?.addEventListener("click", () => { grabStep3(); currentStep=4; updateStepUI(); render5Porques(); });
-    document.getElementById("prevStep4")?.addEventListener("click", () => { grabStep4(); currentStep=3; updateStepUI(); });
-    document.getElementById("nextStep4")?.addEventListener("click", () => { grabStep4(); currentStep=5; updateStepUI(); renderAcciones(); });
-    document.getElementById("prevStep5")?.addEventListener("click", () => { grabStep5(); currentStep=4; updateStepUI(); render5Porques(); });
-    document.getElementById("nextStep5")?.addEventListener("click", () => { grabStep5(); currentStep=6; updateStepUI(); mostrarInforme(); });
-    document.getElementById("prevStep6")?.addEventListener("click", () => { currentStep=5; updateStepUI(); renderAcciones(); });
-    document.getElementById("addAccionBtn")?.addEventListener("click", addAccion);
-    document.getElementById("exportarInformeBtn")?.addEventListener("click", exportarInforme);
-    document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("¿Borrar toda la investigación actual?")) location.reload(); });
-  }
+if(!validar()) return;
 
-  function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+let reporteHTML = `
+<h2>Informe Investigación Accidente</h2>
+<p><b>Consecutivo:</b> ${consecutivo.value}</p>
+<p><b>Fecha:</b> ${fecha.value}</p>
+<p><b>Lugar:</b> ${lugar.value}</p>
+<p><b>Descripción:</b> ${descripcion.value}</p>
 
-  init();
+<h3>Causas</h3>
+<p>Actos: ${actos.value}</p>
+<p>Condiciones: ${condiciones.value}</p>
+
+<h3>5 Porqués</h3>
+${[1,2,3,4,5].map(i=>`<p>${i}: ${document.getElementById("p"+i).value}</p>`).join("")}
+
+<h3>Plan de Acción</h3>
+${acciones.map(a=>`<p>${a.desc} - ${a.resp} - ${a.fecha} - ${a.estado}</p>`).join("")}
+
+<p><b>Conclusión:</b> Evento asociado a fallas del SG-SST.</p>
+
+<img src="${canvas.toDataURL()}" width="200">
+
+<p style="font-size:10px;">
+Documento conforme a Decreto 1072 de 2015 y Resolución 0312 de 2019.
+</p>
+`;
+
+document.getElementById("reporte").innerHTML = reporteHTML;
+
+// PDF
+html2pdf().from(document.getElementById("reporte")).save("Informe_SST.pdf");
+
+// aumentar consecutivo
+cons++;
+localStorage.setItem("consecutivo", cons);
+
+Swal.fire("PDF generado","Documento listo","success");
+}
+
 </script>
+
 </body>
 </html>
