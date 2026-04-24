@@ -4,245 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consola SST - Entrena Consulting</title>
-
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-    <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         :root {
-            --bg:#0d1117;
-            --surface:#161b22;
-            --surface2:#1c2230;
-            --border:#30363d;
-            --blue:#1f6feb;
-            --purple:#8957e5;
-            --orange:#e67e22;
-            --green:#3fb950;
-            --text:#e6edf3;
-            --muted:#8b949e;
-            --accent:#58a6ff;
+            --bg:        #0d1117;
+            --surface:   #161b22;
+            --surface2:  #1c2230;
+            --border:    #30363d;
+            --blue:      #1f6feb;
+            --blue-glow: rgba(31,111,235,0.18);
+            --orange:    #e67e22;
+            --orange-glow: rgba(230,126,34,0.18);
+            --purple:    #8957e5;
+            --green:     #3fb950;
+            --text:      #e6edf3;
+            --muted:     #8b949e;
+            --accent:    #58a6ff;
         }
 
-        *{box-sizing:border-box;margin:0;padding:0;}
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body{
-            font-family:'Sora',sans-serif;
-            background:var(--bg);
-            color:var(--text);
-            padding:40px 20px;
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 60px;
+            background-image:
+                linear-gradient(rgba(31,111,235,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31,111,235,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
-        header{
-            text-align:center;
-            margin-bottom:40px;
-        }
+        header { text-align: center; margin-bottom: 48px; animation: fadeDown .5s ease both; }
+        .brand-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; padding: 6px 16px; font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 20px; }
+        .brand-badge i { color: var(--accent); font-size: 10px; }
+        h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 10px; }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--muted); font-size: .9rem; font-weight: 400; max-width: 440px; margin: 0 auto; line-height: 1.6; }
 
-        .brand{
-            font-size:12px;
-            color:var(--muted);
-            margin-bottom:10px;
-        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 860px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; animation: fadeUp .5s ease both; transition: border-color .25s, box-shadow .25s; }
+        .card:hover { border-color: #444c56; box-shadow: 0 0 0 1px #444c56; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+        .card.blue::before   { background: linear-gradient(90deg, var(--blue), transparent); }
+        .card.orange::before { background: linear-gradient(90deg, var(--orange), transparent); }
+        .card.green::before  { background: linear-gradient(90deg, var(--green), transparent); }
+        .card.full { grid-column: span 2; }
 
-        h1{
-            font-size:2.4rem;
-            font-weight:800;
-        }
+        .card-head { display: flex; align-items: center; gap: 12px; }
+        .icon-wrap { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .icon-wrap.blue   { background: var(--blue-glow); color: var(--accent); }
+        .icon-wrap.orange { background: var(--orange-glow); color: var(--orange); }
+        .icon-wrap.green  { background: rgba(63,185,80,.15); color: var(--green); }
 
-        .subtitle{
-            color:var(--muted);
-            margin-top:8px;
-        }
+        .card-title { font-size: .95rem; font-weight: 700; color: var(--text); }
+        .card-desc { font-size: .75rem; color: var(--muted); margin-top: 2px; font-weight: 400; }
 
-        .grid{
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:20px;
-            max-width:900px;
-            margin:auto;
-        }
+        .prompt-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #adbac7; line-height: 1.6; resize: none; width: 100%; height: 120px; outline: none; transition: border-color .2s; }
+        .btn-copy { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border-radius: 8px; border: none; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .82rem; cursor: pointer; transition: all .2s; width: 100%; }
+        .btn-copy.blue { background: var(--blue); color: white; }
+        .btn-copy.orange { background: var(--orange); color: white; }
+        .btn-copy.success { background: var(--green) !important; }
 
-        .card{
-            background:var(--surface);
-            border:1px solid var(--border);
-            border-radius:14px;
-            padding:24px;
-            transition:0.2s;
-        }
+        .app-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+        .btn-link { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); text-decoration: none; font-weight: 700; font-size: .88rem; transition: all .2s; }
+        .btn-link:hover { background: #1f2937; border-color: var(--accent); color: var(--accent); }
+        
+        /* Estilo especial para el nuevo botón */
+        .btn-link.highlight { border-left: 3px solid var(--purple); }
+        .btn-link.highlight i { color: var(--purple); }
 
-        .card:hover{
-            border-color:var(--accent);
-            transform:translateY(-3px);
-        }
+        .section-label { grid-column: span 2; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-top: 8px; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        .full{
-            grid-column:span 2;
-        }
-
-        .card-head{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:12px;
-        }
-
-        .icon{
-            width:40px;
-            height:40px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            border-radius:10px;
-            background:var(--surface2);
-        }
-
-        .title{
-            font-weight:700;
-        }
-
-        .desc{
-            font-size:12px;
-            color:var(--muted);
-        }
-
-        .btn{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:8px;
-            padding:12px;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:700;
-            margin-top:15px;
-            transition:0.2s;
-        }
-
-        .blue{background:var(--blue);color:white;}
-        .purple{background:var(--purple);color:white;}
-        .orange{background:var(--orange);color:white;}
-        .green{background:var(--green);color:white;}
-
-        .btn:hover{
-            opacity:0.9;
-            transform:translateY(-2px);
-        }
-
-        footer{
-            margin-top:40px;
-            text-align:center;
-            font-size:12px;
-            color:var(--muted);
-        }
-
-        @media(max-width:700px){
-            .grid{grid-template-columns:1fr;}
-            .full{grid-column:span 1;}
-        }
+        footer { margin-top: 52px; text-align: center; font-size: .75rem; color: var(--muted); }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } .card.full, .section-label { grid-column: span 1; } }
     </style>
 </head>
-
 <body>
 
 <header>
-    <div class="brand">Entrena Consulting SAS</div>
-    <h1>Centro de Comando SST</h1>
-    <div class="subtitle">Sistema profesional de gestión SG-SST (Colombia)</div>
+    <div class="brand-badge"><i class="fas fa-circle"></i> Entrena Consulting SAS</div>
+    <h1>Centro de Comandos <span>IA · SST</span></h1>
+    <p class="subtitle">Módulos normativos y herramientas de gestión técnica.</p>
 </header>
 
 <div class="grid">
+    <div class="section-label"><i class="fas fa-robot"></i> Prompts Normativos</div>
 
-    <!-- MATRIZ LEGAL -->
-    <div class="card">
+    <div class="card blue">
         <div class="card-head">
-            <div class="icon"><i class="fas fa-balance-scale"></i></div>
+            <div class="icon-wrap blue"><i class="fas fa-building"></i></div>
             <div>
-                <div class="title">Matriz Legal 1072</div>
-                <div class="desc">Decreto 1072 · Resolución 0312</div>
+                <div class="card-title">Propiedad Horizontal</div>
+                <div class="card-desc">Experto Ley 675 / 2001</div>
             </div>
         </div>
-
-        <p class="desc">
-            Gestión de requisitos legales, seguimiento y cumplimiento normativo del SG-SST.
-        </p>
-
-        <a href="matriz-1072.html" class="btn blue">
-            <i class="fas fa-arrow-right"></i> Abrir módulo
-        </a>
+        <textarea id="prompt675" class="prompt-box" readonly>Actúa como experto en Propiedad Horizontal Colombia. Base legal: Ley 675/2001. Prioriza áreas comunes, cuotas de administración y responsabilidad del administrador.</textarea>
+        <button class="btn-copy blue" onclick="copyText('prompt675', this)"><i class="fas fa-copy"></i> Copiar Prompt</button>
     </div>
 
-    <!-- PROPIEDAD HORIZONTAL -->
-    <div class="card">
+    <div class="card orange">
         <div class="card-head">
-            <div class="icon"><i class="fas fa-building"></i></div>
+            <div class="icon-wrap orange"><i class="fas fa-hard-hat"></i></div>
             <div>
-                <div class="title">Propiedad Horizontal</div>
-                <div class="desc">Ley 675 de 2001</div>
+                <div class="card-title">SG-SST</div>
+                <div class="card-desc">Dec. 1072 / Res. 0312</div>
             </div>
         </div>
-
-        <p class="desc">
-            Control normativo, administración y gestión de riesgos en copropiedades.
-        </p>
-
-        <a href="#" class="btn orange">
-            <i class="fas fa-lock"></i> Próximamente
-        </a>
+        <textarea id="prompt1072" class="prompt-box" readonly>Actúa como Especialista en SG-SST Colombia. Base legal: Decreto 1072 de 2015 y Resolución 0312 de 2019. Enfócate en estándares mínimos y ciclo PHVA.</textarea>
+        <button class="btn-copy orange" onclick="copyText('prompt1072', this)"><i class="fas fa-copy"></i> Copiar Prompt</button>
     </div>
 
-    <!-- INVESTIGACIÓN DE ACCIDENTES -->
-    <div class="card full">
+    <div class="section-label"><i class="fas fa-table"></i> Aplicaciones</div>
+
+    <div class="card green full">
         <div class="card-head">
-            <div class="icon"><i class="fas fa-microscope"></i></div>
+            <div class="icon-wrap green"><i class="fas fa-layer-group"></i></div>
             <div>
-                <div class="title">Investigación de Accidentes</div>
-                <div class="desc">Res. 1401 · Dec. 1072 · Res. 0312</div>
+                <div class="card-title">Herramientas de Gestión</div>
+                <div class="card-desc">Acceso directo a módulos de trabajo</div>
             </div>
         </div>
-
-        <p class="desc">
-            Sistema completo de investigación:
-            ✔ Árbol de causas  
-            ✔ 5 Porqués  
-            ✔ Plan de acción  
-            ✔ Informe PDF  
-            ✔ Cumplimiento ARL
-        </p>
-
-        <a href="Investigacion-de-accidentes.html" class="btn purple">
-            <i class="fas fa-arrow-right"></i> Abrir sistema
-        </a>
-    </div>
-
-    <!-- FUTURO MÓDULO -->
-    <div class="card full">
-        <div class="card-head">
-            <div class="icon"><i class="fas fa-calendar"></i></div>
-            <div>
-                <div class="title">Cronograma SST</div>
-                <div class="desc">Plan anual SG-SST</div>
-            </div>
+        <div class="app-links">
+            <a href="matriz-1072.html" class="btn-link">
+                <i class="fas fa-balance-scale"></i> Matriz Legal (1072)
+            </a>
+            <a href="Investigacion-de-accidentes.html" class="btn-link highlight">
+                <i class="fas fa-microscope"></i> Investigación de Accidentes
+            </a>
+            <a href="#" class="btn-link" style="opacity:0.5; pointer-events:none;">
+                <i class="fas fa-file-alt"></i> Documentos del Sistema
+            </a>
         </div>
-
-        <p class="desc">
-            Planificación de actividades, auditorías y seguimiento del sistema.
-        </p>
-
-        <a href="#" class="btn green">
-            <i class="fas fa-lock"></i> Próximamente
-        </a>
     </div>
-
 </div>
 
 <footer>
-    Entrena Consulting SAS · Bogotá · 2026  
-    <br>
-    Plataforma SG-SST Profesional
+    <p><strong>Entrena Consulting SAS</strong> &nbsp;·&nbsp; Colombia &nbsp;·&nbsp; 2026</p>
 </footer>
 
+<script>
+function copyText(id, btn) {
+    const textarea = document.getElementById(id);
+    const original = btn.innerHTML;
+    navigator.clipboard.writeText(textarea.value).then(() => {
+        btn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+        btn.classList.add('success');
+        setTimeout(() => {
+            btn.innerHTML = original;
+            btn.classList.remove('success');
+        }, 2000);
+    });
+}
+</script>
 </body>
 </html>
