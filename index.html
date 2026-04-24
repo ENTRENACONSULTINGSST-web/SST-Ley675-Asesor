@@ -53,4 +53,32 @@ Actúa como Especialista en SG-SST. Base: Decreto 1072 de 2015. Enfócate en est
 
         <div class="tool-box full-width">
             <h3><i class="fas fa-table"></i> Aplicación: Gestor de Matriz Legal (1072)</h3>
-            <p style="font-size: 0.9em; color
+            <p style="font-size: 0.9em; color: #666;">Herramienta autónoma para editar, filtrar y exportar requisitos en CSV.</p>
+            <a href="matriz-1072.html" class="btn-link">
+                <i class="fas fa-external-link-alt"></i> Abrir Aplicación de Matriz
+            </a>
+        </div>
+    </div>
+</div>
+
+<footer>Entrena Consulting SAS - Especialistas en SST</footer>
+
+<script>
+function copyText(id) {
+    var copyText = document.getElementById(id);
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // Para móviles
+    
+    try {
+        navigator.clipboard.writeText(copyText.value);
+        alert("¡Código de experto copiado! Pégalo en Claude o ChatGPT.");
+    } catch (err) {
+        // Opción de respaldo si clipboard falla
+        document.execCommand("copy");
+        alert("¡Copiado con éxito!");
+    }
+}
+</script>
+
+</body>
+</html>
