@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz Legal 1072 - Entrena Consulting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h1 class="text-2xl font-bold text-slate-800">
+                <i class="fas fa-gavel text-blue-600 mr-2"></i>Gestor de Requisitos Legales (Decreto 1072)
+            </h1>
+            <button onclick="exportarCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+                <i class="fas fa-file-csv mr-1"></i> Exportar CSV
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 bg-slate-50 p-4 rounded-lg">
+            <input type="text" id="norma" placeholder="Norma (Ej: Dec 1072)" class="p-2 border rounded">
+            <input type="number" id="anio" placeholder="Año" class="p-2 border rounded">
+            <input type="text" id="descripcion" placeholder="Descripción del requisito" class="col-span-1 md:col-span-2 p-2 border rounded">
+            <button onclick="agregarRequisito()" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+                <i class="fas fa-plus mr-1"></i> Agregar
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-800 text-white">
+                        <th class="p-3 border">Norma</th>
+                        <th class="p-3 border">Año</th>
+                        <th class="p-3 border">Descripción</th>
+                        <th class="p-3 border text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaCuerpo">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let requisitos = JSON.parse(localStorage.getItem('requisitos1072')) || [
+            { norma: "Dec 1072", anio: 2015, desc: "Implementación del SG-SST" },
+            { norma: "Res 0312", anio: 2019, desc: "Estándares mínimos de SST" }
+        ];
+
+        function renderizarTabla() {
+            const cuerpo = document.getElementById('tablaCuerpo');
+            cuerpo.innerHTML = '';
+            requisitos.forEach((req, index) => {
+                cuerpo.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 border">${req.norma}</td>
+                        <td class="p-3 border">${req.anio}</td>
+                        <td class="p-3 border">${req.desc}</td>
+                        <td class="p-3 border text-center">
+                            <button onclick="eliminar(${index})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+            localStorage.setItem('requisitos1072', JSON.stringify(requisitos));
+        }
+
+        function agregarRequisito() {
+            const norma = document.getElementById('norma').value;
+            const anio = document.getElementById('anio').value;
+            const desc = document.getElementById('descripcion').value;
+            
+            if(norma && anio && desc) {
+                requisitos.push({ norma, anio, desc });
+                renderizarTabla();
+                document.querySelectorAll('input').forEach(i => i.value = '');
+            }
+        }
+
+        function eliminar(index) {
+            if(confirm('¿Eliminar este requisito?')) {
+                requisitos.splice(index, 1);
+                renderizarTabla();
+            }
+        }
+
+        function exportarCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Norma,Anio,Descripcion\n" 
+                + requisitos.map(r => `${r.norma},${r.anio},${r.desc}`).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "matriz_legal_1072.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        renderizarTabla();
+    </script>
+</body>
+</html>
