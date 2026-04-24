@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Investigación de Accidentes SG-SST | Ishikawa + 5 Porqués + FTA</title>
+    <title>Investigación de Accidentes SG-SST | Colombia | Decreto 1072</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -11,7 +11,8 @@
         .step.active { background-color: #1e3a8a; color: white; }
         .step.completed { background-color: #10b981; color: white; }
         .cause-card { transition: all 0.2s; }
-        .cause-card:hover { transform: translateY(-2px); }
+        .method-tab { transition: all 0.2s; cursor: pointer; }
+        .method-tab.active { background-color: #2563eb; color: white; border-color: #2563eb; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans p-4 md:p-6">
@@ -26,7 +27,7 @@
         </div>
         <p class="text-sm text-gray-600 mt-2">
             Decreto 1072 de 2015 (Art. 2.2.4.6.16) – Resolución 0312 de 2019 (Estándar 1.1.3)<br>
-            <strong>Plazo máximo 15 días</strong> – Metodologías: Espina de Pescado + 5 Porqués + Árbol de Fallas (FTA)
+            Metodologías con generación explícita de Causa Raíz.
         </p>
     </div>
 
@@ -35,21 +36,21 @@
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="1">1. Datos</div>
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="2">2. Causas inmediatas</div>
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="3">3. Causas básicas</div>
-        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="4">4. Espina + 5 Porqués</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="4">4. Análisis (metodología)</div>
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="5">5. Plan de acción</div>
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="6">6. Informe final</div>
     </div>
 
     <!-- Contenedor de pasos -->
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-        <!-- PASO 1: DATOS DEL SUCESO (igual que antes) -->
+        <!-- PASO 1: DATOS DEL SUCESO -->
         <div id="step1" class="step-content p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-info-circle text-blue-600 mr-2"></i>Información obligatoria del accidente</h2>
             <div class="grid md:grid-cols-2 gap-4">
                 <div><label class="font-semibold">Consecutivo *</label><input type="text" id="consecutivo" class="w-full border rounded p-2" placeholder="INV-001" value="INV-1"></div>
                 <div><label class="font-semibold">Fecha del accidente *</label><input type="date" id="fechaAcc" class="w-full border rounded p-2"></div>
                 <div><label class="font-semibold">Hora *</label><input type="time" id="horaAcc" class="w-full border rounded p-2"></div>
-                <div><label class="font-semibold">Lugar exacto</label><input type="text" id="lugar" class="w-full border rounded p-2" placeholder="Ej. cuarto de bombas, escalera bloque B"></div>
+                <div><label class="font-semibold">Lugar exacto</label><input type="text" id="lugar" class="w-full border rounded p-2" placeholder="Ej. cuarto de bombas"></div>
                 <div><label class="font-semibold">Trabajador afectado (nombre, cargo, ARL)</label><input type="text" id="trabajador" class="w-full border rounded p-2"></div>
                 <div><label class="font-semibold">Empresa empleadora (o contratista)</label><input type="text" id="empresa" class="w-full border rounded p-2"></div>
                 <div><label class="font-semibold">Tipo de suceso</label>
@@ -70,8 +71,8 @@
         <div id="step2" class="step-content hidden p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-bolt text-yellow-600 mr-2"></i>Causas inmediatas (actos y condiciones subestándar)</h2>
             <div class="grid md:grid-cols-2 gap-6">
-                <div><label class="font-bold block mb-1">Actos inseguros (comportamientos)</label><textarea id="actosInseguros" rows="4" class="w-full border rounded p-2" placeholder="Ej. No usar bloqueo de energía, trabajar sin arnés, ignorar señalización"></textarea></div>
-                <div><label class="font-bold block mb-1">Condiciones inseguras (entorno/equipos)</label><textarea id="condicionesInseguras" rows="4" class="w-full border rounded p-2" placeholder="Ej. piso resbaloso, falta de guardas, iluminación deficiente"></textarea></div>
+                <div><label class="font-bold block mb-1">Actos inseguros (comportamientos)</label><textarea id="actosInseguros" rows="4" class="w-full border rounded p-2" placeholder="Ej. No usar bloqueo de energía"></textarea></div>
+                <div><label class="font-bold block mb-1">Condiciones inseguras (entorno/equipos)</label><textarea id="condicionesInseguras" rows="4" class="w-full border rounded p-2" placeholder="Ej. piso resbaloso"></textarea></div>
             </div>
             <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-arrow-left"></i> Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
         </div>
@@ -80,37 +81,55 @@
         <div id="step3" class="step-content hidden p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tree text-emerald-700 mr-2"></i>Causas básicas (factores personales y de gestión)</h2>
             <div class="grid md:grid-cols-2 gap-5">
-                <div><label class="font-bold">Factores personales</label><textarea id="factoresPersonales" rows="3" class="w-full border rounded p-2" placeholder="Falta de entrenamiento, fatiga, estrés, falta de habilidad"></textarea></div>
-                <div><label class="font-bold">Factores de gestión</label><textarea id="factoresGestion" rows="3" class="w-full border rounded p-2" placeholder="Supervisión débil, ausencia de procedimiento, falta de recursos"></textarea></div>
+                <div><label class="font-bold">Factores personales</label><textarea id="factoresPersonales" rows="3" class="w-full border rounded p-2" placeholder="Falta de entrenamiento, fatiga..."></textarea></div>
+                <div><label class="font-bold">Factores de gestión</label><textarea id="factoresGestion" rows="3" class="w-full border rounded p-2" placeholder="Supervisión débil, ausencia de procedimiento..."></textarea></div>
             </div>
             <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
         </div>
 
-        <!-- PASO 4: ESPINA DE PESCADO + 5 PORQUÉS (totalmente rediseñado) -->
+        <!-- PASO 4: ANÁLISIS CON METODOLOGÍA SELECCIONABLE -->
         <div id="step4" class="step-content hidden p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-fish text-emerald-600 mr-2"></i>Diagrama de Ishikawa (Espina de Pescado)</h2>
-            <p class="text-sm text-gray-600 mb-4">Agregue causas potenciales en cada categoría. Luego seleccione la causa principal y aplique los 5 porqués.</p>
-            
-            <!-- Contenedor de las 6 categorías (mismo estilo que la app anterior) -->
-            <div id="fishboneContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"></div>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-chart-line text-indigo-600 mr-2"></i>Seleccione la metodología de análisis</h2>
+            <!-- Selector de metodología (pestañas) -->
+            <div class="flex gap-2 mb-6 border-b">
+                <div id="tabFishbone" class="method-tab px-4 py-2 rounded-t-lg border border-b-0 font-semibold bg-blue-100 text-blue-800 active">🐟 Espina de Pescado + 5 Porqués</div>
+                <div id="tabFTA" class="method-tab px-4 py-2 rounded-t-lg border border-b-0 font-semibold bg-gray-100 text-gray-700">🌲 Árbol de Fallas (FTA)</div>
+            </div>
 
-            <!-- Módulo de 5 Porqués -->
-            <div class="border-t pt-6 mt-4">
-                <h3 class="text-lg font-bold text-purple-700 mb-3"><i class="fas fa-question-circle"></i> Análisis de causa raíz – 5 Porqués</h3>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <label class="font-semibold block mb-2">Seleccione la causa principal (desde la espina de pescado) para analizar:</label>
-                    <select id="causaPrincipalSelect" class="w-full border rounded p-2 mb-4 bg-white">
+            <!-- Contenido Metodología 1: Espina de Pescado + 5 Porqués -->
+            <div id="methodFishbone" class="method-content">
+                <p class="text-sm text-gray-600 mb-3">Agregue causas potenciales en cada categoría. Luego seleccione la causa principal y responda los 5 porqués. Finalmente, genere la causa raíz.</p>
+                <div id="fishboneContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+                <div class="border-t pt-4 mt-2">
+                    <h3 class="text-md font-bold text-purple-700">5 Porqués</h3>
+                    <label class="block text-sm font-medium mt-2">Causa principal (seleccionada desde la espina):</label>
+                    <select id="causaPrincipalSelect" class="w-full border rounded p-2 mb-3 bg-white">
                         <option value="">-- Primero agregue causas en el diagrama --</option>
                     </select>
-                    <div id="porquesContainer" class="space-y-3">
-                        <!-- Se rellena con JS -->
-                    </div>
+                    <div id="porquesContainer" class="space-y-3"></div>
+                    <button id="btnGenerarRaizFishbone" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-sync-alt"></i> Generar causa raíz (desde 5º porqué)</button>
+                    <div id="raizFishboneResultado" class="mt-3 p-3 bg-green-50 border rounded hidden font-semibold"></div>
                 </div>
             </div>
 
-            <!-- Botón de ayuda para metodología complementaria (Árbol de Fallas) -->
-            <div class="mt-6 text-center">
-                <button id="btnAyudaMetodologia" class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg text-sm hover:bg-indigo-200"><i class="fas fa-tree"></i> Metodología sugerida adicional: Árbol de Fallas (FTA)</button>
+            <!-- Contenido Metodología 2: Árbol de Fallas (FTA) -->
+            <div id="methodFTA" class="method-content hidden">
+                <p class="text-sm text-gray-600 mb-3">Defina el <strong>evento tope</strong> (el accidente) y agregue fallas básicas con relaciones lógicas. Genere la causa raíz según el árbol.</p>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <label class="font-bold block">Evento tope (descripción del accidente):</label>
+                    <input type="text" id="ftaTopEvent" class="w-full border rounded p-2 mb-4" placeholder="Ej. Caída de trabajador en mantenimiento de ascensor">
+                    <label class="font-bold block">Fallas básicas (una por línea):</label>
+                    <textarea id="ftaBasicEvents" rows="4" class="w-full border rounded p-2 mb-2" placeholder="Ej. Falta de arnés&#10;Superficie resbalosa&#10;Ausencia de permiso de trabajo"></textarea>
+                    <div class="mb-3">
+                        <label class="font-bold">Tipo de compuerta lógica (relación entre fallas):</label>
+                        <select id="ftaGate" class="w-full border rounded p-2">
+                            <option value="OR">OR (cualquiera de las fallas produce el evento)</option>
+                            <option value="AND">AND (todas las fallas deben ocurrir simultáneamente)</option>
+                        </select>
+                    </div>
+                    <button id="btnGenerarRaizFTA" class="bg-indigo-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-cogs"></i> Generar causa raíz desde FTA</button>
+                    <div id="raizFTAResultado" class="mt-4 p-3 bg-white border rounded hidden"></div>
+                </div>
             </div>
 
             <div class="flex justify-between mt-6">
@@ -119,7 +138,7 @@
             </div>
         </div>
 
-        <!-- PASO 5: PLAN DE ACCIÓN (igual) -->
+        <!-- PASO 5: PLAN DE ACCIÓN -->
         <div id="step5" class="step-content hidden p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tasks text-indigo-600 mr-2"></i>Plan de acción correctivo</h2>
             <div id="accionesContainer" class="space-y-3 mb-4"></div>
@@ -127,7 +146,7 @@
             <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Generar informe</button></div>
         </div>
 
-        <!-- PASO 6: INFORME FINAL (se actualizará para mostrar el Ishikawa) -->
+        <!-- PASO 6: INFORME FINAL -->
         <div id="step6" class="step-content hidden p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-file-alt text-red-600 mr-2"></i>Informe final de investigación</h2>
             <div id="informeFinal" class="bg-gray-50 border rounded-lg p-5 text-sm space-y-4 overflow-auto max-h-[70vh]"></div>
@@ -138,33 +157,28 @@
             </div>
         </div>
     </div>
-    <div class="text-center text-xs text-gray-500 mt-4">Herramienta SG-SST – Decreto 1072 – Resolución 0312 – Metodologías integradas</div>
+    <div class="text-center text-xs text-gray-500 mt-4">Herramienta SG-SST – Decreto 1072 – Resolución 0312 – Con generación explícita de Causa Raíz</div>
 </div>
 
 <script>
-    // --------------------------------------------------------------
-    // ESTADO GLOBAL AMPLIADO
-    // --------------------------------------------------------------
+    // ---------- ESTADO GLOBAL ----------
     let investigation = {
         consecutivo: "INV-1",
         basico: { fecha: "", hora: "", lugar: "", trabajador: "", empresa: "", tipo: "", descripcion: "", consecuencias: "" },
         causasInmediatas: { actos: "", condiciones: "" },
         causasBasicas: { personales: "", gestion: "" },
-        // Espina de pescado: categorías con arrays de causas
-        fishbone: {
-            Personas: [],
-            Procedimientos: [],
-            Equipos: [],
-            Materiales: [],
-            Entorno: [],
-            Medicion: []   // también llamada "Medición/Control"
-        },
-        causaPrincipal: "",          // causa seleccionada para 5 porqués
+        // Fishbone
+        fishbone: { Personas: [], Procedimientos: [], Equipos: [], Materiales: [], Entorno: [], Medicion: [] },
+        causaPrincipal: "",
         cincoPorques: ["", "", "", "", ""],
+        // FTA
+        metodologiaActiva: "fishbone", // "fishbone" o "fta"
+        fta: { topEvent: "", basicEvents: [], gate: "OR", rootCause: "" },
+        // Causa raíz generada (unificada)
+        rootCause: "",
         acciones: []
     };
 
-    // Constantes
     const categories = ["Personas", "Procedimientos", "Equipos", "Materiales", "Entorno", "Medicion"];
     const categoryIcons = { Personas: "👥", Procedimientos: "📋", Equipos: "🛠️", Materiales: "📦", Entorno: "🌍", Medicion: "📊" };
 
@@ -183,14 +197,44 @@
         });
         if(currentStep === 4) {
             renderFishbone();
-            actualizarSelectCausaPrincipal();
+            actualizarSelectCausa();
             render5PorquesUI();
+            // sincronizar metodología activa
+            if(investigation.metodologiaActiva === "fishbone") {
+                document.getElementById("methodFishbone").classList.remove("hidden");
+                document.getElementById("methodFTA").classList.add("hidden");
+                document.getElementById("tabFishbone").classList.add("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFTA").classList.remove("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFTA").classList.add("bg-gray-100","text-gray-700");
+                if(investigation.rootCause && investigation.metodologiaActiva==="fishbone") {
+                    document.getElementById("raizFishboneResultado").innerHTML = `Causa raíz generada: ${investigation.rootCause}`;
+                    document.getElementById("raizFishboneResultado").classList.remove("hidden");
+                } else {
+                    document.getElementById("raizFishboneResultado").classList.add("hidden");
+                }
+            } else {
+                document.getElementById("methodFTA").classList.remove("hidden");
+                document.getElementById("methodFishbone").classList.add("hidden");
+                document.getElementById("tabFTA").classList.add("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFishbone").classList.remove("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFishbone").classList.add("bg-gray-100","text-gray-700");
+                // cargar datos FTA en UI
+                document.getElementById("ftaTopEvent").value = investigation.fta.topEvent;
+                document.getElementById("ftaBasicEvents").value = investigation.fta.basicEvents.join("\n");
+                document.getElementById("ftaGate").value = investigation.fta.gate;
+                if(investigation.fta.rootCause) {
+                    document.getElementById("raizFTAResultado").innerHTML = `<div class="bg-green-50 p-2 rounded">Causa raíz: ${investigation.fta.rootCause}</div>`;
+                    document.getElementById("raizFTAResultado").classList.remove("hidden");
+                } else {
+                    document.getElementById("raizFTAResultado").classList.add("hidden");
+                }
+            }
         }
         if(currentStep === 5) renderAcciones();
         if(currentStep === 6) mostrarInforme();
     }
 
-    // Funciones de guardado de pasos anteriores (sin cambios relevantes)
+    // Guardado de pasos
     function saveStep1() {
         investigation.consecutivo = document.getElementById("consecutivo").value;
         investigation.basico = {
@@ -220,16 +264,11 @@
         return true;
     }
     function saveStep4() {
-        // Los datos de fishbone ya están en el estado (se actualizan en tiempo real)
-        // Los 5 porqués ya están en investigation.cincoPorques
-        // La causa principal ya está en investigation.causaPrincipal (desde el select)
+        // Ya se guarda en tiempo real
         return true;
     }
-    function saveStep5() { return true; }
 
-    // --------------------------------------------------------------
-    // ESPINA DE PESCADO INTERACTIVA
-    // --------------------------------------------------------------
+    // ---------------- ESPINA DE PESCADO ----------------
     function renderFishbone() {
         const container = document.getElementById("fishboneContainer");
         if(!container) return;
@@ -259,33 +298,22 @@
             `;
             container.appendChild(card);
         }
-        // Agregar event listeners después de renderizar
+        // Eventos dinámicos
         document.querySelectorAll(".addCauseBtn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const cat = btn.getAttribute("data-cat");
                 const input = document.getElementById(`newCauseInput-${cat}`);
-                const newCause = input.value.trim();
-                if(newCause) {
-                    investigation.fishbone[cat].push(newCause);
-                    input.value = "";
-                    renderFishbone();
-                    actualizarSelectCausaPrincipal();
-                } else {
-                    Swal.fire("Campo vacío","Escribe una causa","info");
-                }
+                const val = input.value.trim();
+                if(val) { investigation.fishbone[cat].push(val); input.value = ""; renderFishbone(); actualizarSelectCausa(); }
+                else Swal.fire("Campo vacío","Escriba una causa","info");
             });
         });
         document.querySelectorAll(".quickAddBtn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 const cat = btn.getAttribute("data-cat");
                 const input = document.getElementById(`newCauseInput-${cat}`);
-                const newCause = input.value.trim();
-                if(newCause) {
-                    investigation.fishbone[cat].push(newCause);
-                    input.value = "";
-                    renderFishbone();
-                    actualizarSelectCausaPrincipal();
-                }
+                const val = input.value.trim();
+                if(val) { investigation.fishbone[cat].push(val); input.value = ""; renderFishbone(); actualizarSelectCausa(); }
             });
         });
         document.querySelectorAll(".removeCauseBtn").forEach(btn => {
@@ -294,70 +322,87 @@
                 const idx = parseInt(btn.getAttribute("data-idx"));
                 investigation.fishbone[cat].splice(idx,1);
                 renderFishbone();
-                actualizarSelectCausaPrincipal();
+                actualizarSelectCausa();
             });
         });
     }
 
-    function actualizarSelectCausaPrincipal() {
+    function actualizarSelectCausa() {
         const select = document.getElementById("causaPrincipalSelect");
         if(!select) return;
-        let allCauses = [];
+        let all = [];
         for(let cat of categories) {
-            investigation.fishbone[cat].forEach(cause => {
-                allCauses.push(`[${cat}] ${cause}`);
-            });
+            investigation.fishbone[cat].forEach(c => all.push(`[${cat}] ${c}`));
         }
-        if(allCauses.length === 0) {
-            select.innerHTML = '<option value="">-- No hay causas en el diagrama --</option>';
-            return;
-        }
-        select.innerHTML = '<option value="">-- Seleccione la causa principal --</option>' + 
-            allCauses.map(c => `<option value="${escapeHtml(c)}" ${investigation.causaPrincipal === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join("");
-        select.addEventListener("change", (e) => {
-            investigation.causaPrincipal = e.target.value;
-            // Reiniciar los 5 porqués si se cambia la causa?
-            if(investigation.causaPrincipal) {
-                // Opcional: mantener los porqués actuales; no los reiniciamos automáticamente.
-            }
-            render5PorquesUI();
-        });
+        if(all.length === 0) { select.innerHTML = '<option value="">-- No hay causas en el diagrama --</option>'; return; }
+        select.innerHTML = '<option value="">-- Seleccione causa principal --</option>' + all.map(c => `<option value="${escapeHtml(c)}" ${investigation.causaPrincipal === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join("");
+        select.onchange = (e) => { investigation.causaPrincipal = e.target.value; render5PorquesUI(); };
     }
 
-    // --------------------------------------------------------------
-    // 5 PORQUÉS (vinculados a la causa principal)
-    // --------------------------------------------------------------
     function render5PorquesUI() {
         const container = document.getElementById("porquesContainer");
         if(!container) return;
         if(!investigation.causaPrincipal) {
-            container.innerHTML = `<div class="bg-yellow-50 p-3 rounded text-yellow-800 text-sm">⚠️ Seleccione una causa principal en el menú desplegable para aplicar los 5 porqués.</div>`;
+            container.innerHTML = `<div class="bg-yellow-50 p-3 rounded text-yellow-800 text-sm">⚠️ Seleccione una causa principal en el menú desplegable.</div>`;
             return;
         }
-        let html = `<p class="font-semibold text-gray-700 mb-2">Causa a analizar: <span class="bg-gray-200 px-2 py-1 rounded">${escapeHtml(investigation.causaPrincipal)}</span></p>`;
-        for(let i=1; i<=5; i++) {
-            html += `
-                <div>
-                    <label class="block text-sm font-medium">${i}° Porqué: ¿Por qué ocurrió ${i===1 ? 'esta causa' : 'lo anterior'}?</label>
-                    <textarea id="why${i}" rows="2" class="w-full border rounded p-2 mt-1 why-textarea" data-level="${i}">${investigation.cincoPorques[i-1] || ''}</textarea>
-                </div>
-            `;
+        let html = `<p class="font-semibold">Causa a analizar: <span class="bg-gray-200 px-2 py-1 rounded">${escapeHtml(investigation.causaPrincipal)}</span></p>`;
+        for(let i=1;i<=5;i++) {
+            html += `<div><label class="block text-sm font-medium">${i}° Porqué:</label>
+                     <textarea id="why${i}" rows="2" class="w-full border rounded p-2">${investigation.cincoPorques[i-1] || ""}</textarea></div>`;
         }
         container.innerHTML = html;
-        // Guardar cambios en tiempo real
-        for(let i=1; i<=5; i++) {
-            const textarea = document.getElementById(`why${i}`);
-            if(textarea) {
-                textarea.addEventListener("input", (e) => {
-                    investigation.cincoPorques[i-1] = e.target.value;
-                });
-            }
+        for(let i=1;i<=5;i++) {
+            const ta = document.getElementById(`why${i}`);
+            if(ta) ta.addEventListener("input", (e) => { investigation.cincoPorques[i-1] = e.target.value; });
         }
     }
 
-    // --------------------------------------------------------------
-    // PLAN DE ACCIÓN (igual que antes)
-    // --------------------------------------------------------------
+    // Generar causa raíz desde 5 porqués
+    function generarRaizFishbone() {
+        if(!investigation.causaPrincipal) {
+            Swal.fire("Error","No ha seleccionado una causa principal","error");
+            return;
+        }
+        const quinto = investigation.cincoPorques[4];
+        if(!quinto || quinto.trim() === "") {
+            Swal.fire("Incompleto","Debe responder el 5º porqué para definir la causa raíz","warning");
+            return;
+        }
+        const root = `[Análisis 5 porqués] Partiendo de la causa "${investigation.causaPrincipal}", la causa raíz identificada es: ${quinto}`;
+        investigation.rootCause = root;
+        document.getElementById("raizFishboneResultado").innerHTML = `✅ Causa raíz generada: ${root}`;
+        document.getElementById("raizFishboneResultado").classList.remove("hidden");
+        Swal.fire("Causa raíz","Guardada correctamente","success");
+    }
+
+    // ---------------- ÁRBOL DE FALLAS (FTA) ----------------
+    function generarRaizFTA() {
+        const top = document.getElementById("ftaTopEvent").value.trim();
+        const basicRaw = document.getElementById("ftaBasicEvents").value;
+        const basic = basicRaw.split(/\r?\n/).filter(l => l.trim().length > 0);
+        const gate = document.getElementById("ftaGate").value;
+        if(!top || basic.length === 0) {
+            Swal.fire("Datos insuficientes","Defina el evento tope y al menos una falla básica","warning");
+            return;
+        }
+        investigation.fta.topEvent = top;
+        investigation.fta.basicEvents = basic;
+        investigation.fta.gate = gate;
+        let rootCause = "";
+        if(gate === "OR") {
+            rootCause = `[Árbol de Fallas] Evento tope: "${top}". Ocurre por cualquiera de: ${basic.join(", ")}. Causa raíz prioritaria: ${basic[0]}.`;
+        } else {
+            rootCause = `[Árbol de Fallas] Evento tope: "${top}". Requiere la ocurrencia simultánea de: ${basic.join(" Y ")}. Causa raíz: combinación de todas las fallas.`;
+        }
+        investigation.fta.rootCause = rootCause;
+        investigation.rootCause = rootCause;
+        document.getElementById("raizFTAResultado").innerHTML = `<div class="bg-green-50 p-2 rounded">✅ Causa raíz generada: ${rootCause}</div>`;
+        document.getElementById("raizFTAResultado").classList.remove("hidden");
+        Swal.fire("Causa raíz","Generada desde el árbol de fallas","success");
+    }
+
+    // ---------------- PLAN DE ACCIÓN ----------------
     function renderAcciones() {
         const container = document.getElementById("accionesContainer");
         if(!container) return;
@@ -366,7 +411,7 @@
             const div = document.createElement("div");
             div.className = "bg-gray-100 p-3 rounded-lg border flex flex-wrap gap-2 items-center";
             div.innerHTML = `
-                <div class="flex-1"><input type="text" placeholder="Acción correctiva" class="w-full p-1 border rounded acc-desc-${idx}" value="${escapeHtml(acc.descripcion)}"></div>
+                <div class="flex-1"><input type="text" placeholder="Acción" class="w-full p-1 border rounded acc-desc-${idx}" value="${escapeHtml(acc.descripcion)}"></div>
                 <div class="w-40"><input type="text" placeholder="Responsable" class="w-full p-1 border rounded acc-resp-${idx}" value="${escapeHtml(acc.responsable)}"></div>
                 <div class="w-36"><input type="date" class="w-full p-1 border rounded acc-fecha-${idx}" value="${acc.fecha}"></div>
                 <button class="removeAccion text-red-600" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
@@ -374,194 +419,122 @@
             container.appendChild(div);
         });
         investigation.acciones.forEach((_, idx) => {
-            const descInput = document.querySelector(`.acc-desc-${idx}`);
-            const respInput = document.querySelector(`.acc-resp-${idx}`);
-            const fechaInput = document.querySelector(`.acc-fecha-${idx}`);
-            if(descInput) descInput.addEventListener("change", (e) => investigation.acciones[idx].descripcion = e.target.value);
-            if(respInput) respInput.addEventListener("change", (e) => investigation.acciones[idx].responsable = e.target.value);
-            if(fechaInput) fechaInput.addEventListener("change", (e) => investigation.acciones[idx].fecha = e.target.value);
+            const d = document.querySelector(`.acc-desc-${idx}`); if(d) d.addEventListener("change", e => investigation.acciones[idx].descripcion = e.target.value);
+            const r = document.querySelector(`.acc-resp-${idx}`); if(r) r.addEventListener("change", e => investigation.acciones[idx].responsable = e.target.value);
+            const f = document.querySelector(`.acc-fecha-${idx}`); if(f) f.addEventListener("change", e => investigation.acciones[idx].fecha = e.target.value);
         });
         document.querySelectorAll(".removeAccion").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                const idx = parseInt(btn.getAttribute("data-idx"));
-                investigation.acciones.splice(idx,1);
-                renderAcciones();
-            });
+            btn.addEventListener("click", e => { const idx = parseInt(btn.getAttribute("data-idx")); investigation.acciones.splice(idx,1); renderAcciones(); });
         });
     }
+    function addAccion() { investigation.acciones.push({ descripcion: "", responsable: "", fecha: "" }); renderAcciones(); }
 
-    function addAccion() {
-        investigation.acciones.push({ descripcion: "", responsable: "", fecha: "" });
-        renderAcciones();
-    }
-
-    // --------------------------------------------------------------
-    // INFORME FINAL (incluye Ishikawa y 5 porqués)
-    // --------------------------------------------------------------
+    // ---------------- INFORME FINAL ----------------
     function generarInformeHTML() {
         const b = investigation.basico;
         const dentroPlazo = (() => {
             if(!b.fecha) return "No verificado";
-            const fechaAcc = new Date(b.fecha);
-            const hoy = new Date();
-            const diff = (hoy - fechaAcc) / (1000*3600*24);
-            return diff <= 15 ? "✔️ Dentro del plazo (≤15 días)" : "⚠️ FUERA DE PLAZO (máximo 15 días)";
+            const diff = (new Date() - new Date(b.fecha)) / (1000*3600*24);
+            return diff <= 15 ? "✔️ Dentro del plazo (≤15 días)" : "⚠️ FUERA DE PLAZO";
         })();
-
-        // Construir resumen del Ishikawa
-        let fishboneResumen = "";
-        for(let cat of categories) {
-            if(investigation.fishbone[cat].length > 0) {
-                fishboneResumen += `<li><strong>${cat}:</strong> ${investigation.fishbone[cat].join(", ")}</li>`;
-            }
+        let analisisHtml = "";
+        if(investigation.metodologiaActiva === "fishbone") {
+            let fishRes = "";
+            for(let cat of categories) if(investigation.fishbone[cat].length) fishRes += `<li><strong>${cat}:</strong> ${investigation.fishbone[cat].join(", ")}</li>`;
+            const porques = investigation.cincoPorques.map((p,i)=>`<li><strong>${i+1}°:</strong> ${p || "No respondido"}</li>`).join("");
+            analisisHtml = `<div><strong>🐟 Espina de Pescado:</strong><ul>${fishRes || "<li>No registrada</li>"}</ul></div>
+                            <div><strong>🔍 5 Porqués (causa principal: ${escapeHtml(investigation.causaPrincipal || "Ninguna")}):</strong><ul>${porques}</ul></div>
+                            <div><strong>📌 Causa raíz generada:</strong> ${investigation.rootCause || "No se ha generado la causa raíz. Use el botón correspondiente en el paso 4."}</div>`;
+        } else {
+            const fta = investigation.fta;
+            analisisHtml = `<div><strong>🌲 Árbol de Fallas (FTA):</strong><br>Evento tope: ${escapeHtml(fta.topEvent || "No definido")}<br>
+                            Fallas básicas: ${fta.basicEvents.join(", ")}<br>Compuerta: ${fta.gate === "OR" ? "OR (cualquiera)" : "AND (todas)"}<br>
+                            <strong>Causa raíz generada:</strong> ${investigation.rootCause || fta.rootCause || "No se ha generado la causa raíz. Use el botón correspondiente en el paso 4."}</div>`;
         }
-        if(!fishboneResumen) fishboneResumen = "<li>No se registraron causas en el diagrama</li>";
-
-        const cadenaPorques = investigation.cincoPorques.map((p,i) => `<li><strong>${i+1}° Porqué:</strong> ${p || "No respondido"}</li>`).join("");
         const accionesHtml = investigation.acciones.map(a => `<li>📌 ${escapeHtml(a.descripcion)} – Resp: ${escapeHtml(a.responsable)} – Fecha: ${a.fecha || "Sin fecha"}</li>`).join("");
-        const causaRaiz = investigation.cincoPorques[4] ? investigation.cincoPorques[4] : "No se pudo determinar completamente";
-
         return `
             <div class="border-l-8 border-blue-700 pl-4 space-y-3">
-                <div><i class="fas fa-hashtag"></i> <strong>Consecutivo:</strong> ${escapeHtml(investigation.consecutivo)}</div>
-                <div><strong>Fecha:</strong> ${b.fecha || "N/R"} – <strong>Hora:</strong> ${b.hora || "N/R"} – <strong>Lugar:</strong> ${b.lugar || "N/R"}</div>
-                <div><strong>Trabajador:</strong> ${b.trabajador || "N/R"} – <strong>Empresa:</strong> ${b.empresa || "N/R"} – <strong>Tipo:</strong> ${b.tipo || "N/R"}</div>
-                <div><strong>Descripción:</strong> ${b.descripcion || "N/R"}<br><strong>Consecuencias:</strong> ${b.consecuencias || "N/R"}</div>
-                <div><strong>📌 Causas inmediatas:</strong><br>Actos inseguros: ${investigation.causasInmediatas.actos || "Ninguno"}<br>Condiciones inseguras: ${investigation.causasInmediatas.condiciones || "Ninguna"}</div>
-                <div><strong>📌 Causas básicas:</strong><br>Factores personales: ${investigation.causasBasicas.personales || "N/R"}<br>Factores de gestión: ${investigation.causasBasicas.gestion || "N/R"}</div>
-                <div><strong>🐟 Diagrama de Ishikawa (Espina de Pescado):</strong><ul>${fishboneResumen}</ul></div>
-                <div><strong>🔍 Análisis de 5 Porqués (causa principal: ${escapeHtml(investigation.causaPrincipal || "No seleccionada")}):</strong><ul>${cadenaPorques}</ul></div>
-                <div><strong>📌 Causa raíz identificada:</strong> ${causaRaiz}</div>
+                <div><strong>Consecutivo:</strong> ${escapeHtml(investigation.consecutivo)}</div>
+                <div><strong>Fecha:</strong> ${b.fecha} ${b.hora} – Lugar: ${b.lugar}</div>
+                <div><strong>Trabajador:</strong> ${b.trabajador} – Empresa: ${b.empresa}</div>
+                <div><strong>Descripción:</strong> ${b.descripcion}<br><strong>Consecuencias:</strong> ${b.consecuencias}</div>
+                <div><strong>⚡ Causas inmediatas:</strong><br>Actos: ${investigation.causasInmediatas.actos || "Ninguno"}<br>Condiciones: ${investigation.causasInmediatas.condiciones || "Ninguna"}</div>
+                <div><strong>🌿 Causas básicas:</strong><br>Personales: ${investigation.causasBasicas.personales || "N/R"}<br>Gestión: ${investigation.causasBasicas.gestion || "N/R"}</div>
+                ${analisisHtml}
                 <div><strong>✅ Plan de acción:</strong><ul>${accionesHtml || "<li>No definido</li>"}</ul></div>
-                <div><strong>⚖️ Veredicto y orientación:</strong><br>El accidente fue <strong>PREVENIBLE</strong>. Se debe fortalecer la gestión preventiva, especialmente en ${investigation.causasBasicas.gestion || "factores de gestión"}. Implementar las acciones correctivas y socializar este informe a todos los trabajadores y contratistas.</div>
-                <div class="text-xs text-gray-500 mt-2">Fecha del informe: ${new Date().toLocaleDateString()} – ${dentroPlazo}</div>
+                <div><strong>⚖️ Veredicto:</strong> El accidente fue PREVENIBLE. Se debe implementar el plan de acción y socializar el informe a todos los trabajadores y contratistas.</div>
+                <div class="text-xs text-gray-500">${dentroPlazo} – Fecha del informe: ${new Date().toLocaleDateString()}</div>
             </div>
         `;
     }
-
-    function mostrarInforme() {
-        document.getElementById("informeFinal").innerHTML = generarInformeHTML();
-    }
-
+    function mostrarInforme() { document.getElementById("informeFinal").innerHTML = generarInformeHTML(); }
     function exportarInforme() {
-        const contenido = document.getElementById("informeFinal").innerText;
-        const blob = new Blob([contenido], {type: "text/plain"});
-        const url = URL.createObjectURL(blob);
+        const txt = document.getElementById("informeFinal").innerText;
+        const blob = new Blob([txt], {type:"text/plain"});
         const a = document.createElement("a");
-        a.href = url;
+        a.href = URL.createObjectURL(blob);
         a.download = `investigacion_${investigation.consecutivo}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        Swal.fire("Exportado","Informe descargado.","success");
+        a.click(); URL.revokeObjectURL(a.href);
+        Swal.fire("Exportado","Informe descargado","success");
     }
 
-    // Ayuda metodológica (Árbol de Fallas)
-    function mostrarAyudaFTA() {
-        Swal.fire({
-            title: "Metodología complementaria: Árbol de Fallas (FTA)",
-            html: `<div style="text-align:left">El <strong>Árbol de Fallas (Fault Tree Analysis)</strong> es una técnica deductiva que parte del evento no deseado (accidente) y descompone las causas mediante compuertas lógicas (Y / O). Es útil para sistemas complejos.<br><br>
-            <strong>Ejemplo aplicado:</strong> Accidente: Caída de trabajador en altura.<br>
-            - Compuerta OR: Falta de arnés O fallo de anclaje.<br>
-            - Compuerta AND: No capacitación Y supervisión ausente.<br><br>
-            Se recomienda usarla junto con Ishikawa para validar la lógica de las causas.<br>
-            </div>`,
-            icon: "info",
-            confirmButtonText: "Entendido"
-        });
-    }
-
-    // --------------------------------------------------------------
-    // NAVEGACIÓN Y EVENTOS
-    // --------------------------------------------------------------
-    function initNavigation() {
-        document.querySelectorAll(".next-step").forEach(btn => {
-            btn.addEventListener("click", () => {
-                let canGo = true;
-                if(currentStep === 1) canGo = saveStep1();
-                else if(currentStep === 2) canGo = saveStep2();
-                else if(currentStep === 3) canGo = saveStep3();
-                else if(currentStep === 4) canGo = saveStep4();
-                else if(currentStep === 5) canGo = saveStep5();
-                if(canGo && currentStep < 6) { currentStep++; updateStepUI(); }
-            });
-        });
-        document.querySelectorAll(".prev-step").forEach(btn => {
-            btn.addEventListener("click", () => {
-                if(currentStep === 2) saveStep1();
-                if(currentStep === 3) saveStep2();
-                if(currentStep === 4) saveStep3();
-                if(currentStep === 5) saveStep4();
-                if(currentStep === 6) saveStep5();
-                if(currentStep > 1) { currentStep--; updateStepUI(); }
-            });
-        });
-        stepIndicators.forEach(ind => {
-            ind.addEventListener("click", () => {
-                let target = parseInt(ind.getAttribute("data-step"));
-                if(target > currentStep) {
-                    Swal.fire("Siga el orden","Debe completar los pasos en orden","info");
-                    return;
-                }
-                currentStep = target;
-                updateStepUI();
-            });
-        });
-        document.getElementById("addAccionBtn")?.addEventListener("click", addAccion);
-        document.getElementById("exportarBtn")?.addEventListener("click", exportarInforme);
-        document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("¿Borrar toda la investigación?")) location.reload(); });
-        document.getElementById("btnAyudaMetodologia")?.addEventListener("click", mostrarAyudaFTA);
-    }
-
-    function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, m => m==='&'? '&amp;' : m==='<'? '&lt;' : '&gt;'); }
-
-    // Datos de ejemplo (cargar un Ishikawa de muestra)
-    function cargarEjemplo() {
-        // Datos básicos
+    // ---------------- NAVEGACIÓN Y EVENTOS ----------------
+    function init() {
+        // Datos de ejemplo
         document.getElementById("consecutivo").value = "INV-2026-01";
         document.getElementById("fechaAcc").value = "2026-04-10";
         document.getElementById("horaAcc").value = "09:30";
-        document.getElementById("lugar").value = "Cuarto de bombas - Torre B";
+        document.getElementById("lugar").value = "Cuarto de bombas";
         document.getElementById("trabajador").value = "Carlos Pérez - Técnico - ARL Sura";
         document.getElementById("empresa").value = "Mantenimientos Hidráulicos SAS";
-        document.getElementById("descripcionAcc").value = "Al intentar reparar una válvula sin seguir procedimiento de bloqueo, el trabajador sufre una cortada profunda en la mano derecha.";
-        document.getElementById("consecuencias").value = "8 días de incapacidad, sutura de 5 puntos.";
-        document.getElementById("actosInseguros").value = "No usó guantes de seguridad, omitió el procedimiento de bloqueo de energía.";
-        document.getElementById("condicionesInseguras").value = "Iluminación deficiente, falta de señalización de riesgo eléctrico.";
-        document.getElementById("factoresPersonales").value = "Falta de entrenamiento en LOTO, fatiga por turno extendido.";
-        document.getElementById("factoresGestion").value = "Ausencia de supervisión de los trabajos críticos, el contratista no entregó protocolo de trabajo seguro.";
-
-        // Espina de pescado de ejemplo
-        investigation.fishbone = {
-            Personas: ["Falta de entrenamiento en bloqueo", "Fatiga del operario"],
-            Procedimientos: ["Ausencia de permiso de trabajo", "No se hizo análisis de riesgo"],
-            Equipos: ["Herramienta sin aislamiento", "Guantes inadecuados"],
-            Materiales: ["Válvula oxidada", "Señalización desgastada"],
-            Entorno: ["Iluminación deficiente", "Piso húmedo"],
-            Medicion: ["Supervisión débil", "No se exige lista de verificación"]
-        };
-        investigation.causaPrincipal = "[Procedimientos] Ausencia de permiso de trabajo";
-        investigation.cincoPorques = [
-            "Porque el contratista no contaba con un procedimiento estandarizado",
-            "Porque la copropiedad no validó los protocolos del contratista",
-            "Porque el contrato no incluía cláusulas de SG-SST",
-            "Porque la administración no tiene una matriz de requisitos legales actualizada",
-            "Porque falta cultura preventiva y recursos asignados a la gestión de riesgos"
-        ];
-        investigation.acciones = [
-            { descripcion: "Implementar permiso de trabajo seguro para trabajos de alto riesgo", responsable: "Administrador", fecha: "2026-05-15" },
-            { descripcion: "Capacitar a todos los contratistas en el SG-SST de la copropiedad", responsable: "Comité de Convivencia", fecha: "2026-05-30" }
-        ];
-        // Guardar en los campos del DOM para los pasos 1-3
+        document.getElementById("descripcionAcc").value = "Cortada en mano por no usar bloqueo de energía";
+        document.getElementById("consecuencias").value = "8 días incapacidad";
+        document.getElementById("actosInseguros").value = "No usó guantes, omitió bloqueo";
+        document.getElementById("condicionesInseguras").value = "Iluminación deficiente";
+        document.getElementById("factoresPersonales").value = "Falta de entrenamiento";
+        document.getElementById("factoresGestion").value = "Supervisión débil";
+        investigation.fishbone = { Personas: ["Falta de entrenamiento"], Procedimientos: ["Sin permiso"], Equipos: ["Herramienta inadecuada"], Materiales: [], Entorno: [], Medicion: [] };
+        investigation.cincoPorques = ["No había procedimiento","No lo exigió la copropiedad","Contrato sin cláusulas SST","Administración no supervisa","Falta cultura preventiva"];
+        investigation.causaPrincipal = "[Procedimientos] Sin permiso";
+        investigation.acciones = [{ descripcion: "Implementar permiso de trabajo", responsable: "Admin", fecha: "2026-05-15" }];
+        investigation.fta = { topEvent: "Caída desde escalera", basicEvents: ["Falta de arnés","Superficie resbalosa"], gate: "OR", rootCause: "" };
         saveStep1(); saveStep2(); saveStep3();
-    }
 
-    // Inicializar
-    cargarEjemplo();
-    renderAcciones();
-    initNavigation();
-    updateStepUI();
+        // Selector de metodología
+        document.getElementById("tabFishbone").onclick = () => { investigation.metodologiaActiva = "fishbone"; updateStepUI(); };
+        document.getElementById("tabFTA").onclick = () => { investigation.metodologiaActiva = "fta"; updateStepUI(); };
+
+        // Botones Generar Causa Raíz
+        document.getElementById("btnGenerarRaizFishbone")?.addEventListener("click", generarRaizFishbone);
+        document.getElementById("btnGenerarRaizFTA")?.addEventListener("click", generarRaizFTA);
+
+        document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => {
+            let ok = true;
+            if(currentStep === 1) ok = saveStep1();
+            else if(currentStep === 2) ok = saveStep2();
+            else if(currentStep === 3) ok = saveStep3();
+            else if(currentStep === 4) ok = saveStep4();
+            if(ok && currentStep < 6) { currentStep++; updateStepUI(); }
+        }));
+        document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => {
+            if(currentStep === 2) saveStep1();
+            if(currentStep === 3) saveStep2();
+            if(currentStep === 4) saveStep3();
+            if(currentStep === 5) saveStep4();
+            if(currentStep > 1) { currentStep--; updateStepUI(); }
+        }));
+        stepIndicators.forEach(ind => ind.addEventListener("click", () => {
+            let t = parseInt(ind.getAttribute("data-step"));
+            if(t > currentStep) Swal.fire("Siga el orden","Complete los pasos anteriores","info");
+            else { currentStep = t; updateStepUI(); }
+        }));
+        document.getElementById("addAccionBtn")?.addEventListener("click", addAccion);
+        document.getElementById("exportarBtn")?.addEventListener("click", exportarInforme);
+        document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("¿Borrar todo?")) location.reload(); });
+        updateStepUI();
+    }
+    function escapeHtml(s) { if(!s) return ""; return s.replace(/[&<>]/g, m => m==='&'? '&amp;' : m==='<'? '&lt;' : '&gt;'); }
+    init();
 </script>
 </body>
 </html>
