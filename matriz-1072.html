@@ -1,105 +1,328 @@
-<div id="modalRequisito" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto">
-        <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-3xl">
-            <h2 id="modalTitulo" class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fas fa-search-plus"></i>
-                <span>Nuevo Requisito Legal</span>
-            </h2>
-            <button id="cerrarModal" class="text-white/70 hover:text-white text-3xl leading-none">&times;</button>
-        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Matriz SG-SST | Entrena Consulting - Requisitos Legales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+        body { font-family: 'DM Sans', sans-serif; }
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f5f9; }
+        .tooltip-cell { position: relative; }
+        .tooltip-cell:hover .tooltip-text { display: block; }
+        .tooltip-text { display: none; position: absolute; bottom: calc(100% + 6px); left: 0; background: #1e293b; color: white; font-size: 12px; padding: 8px 12px; border-radius: 8px; width: 280px; z-index: 50; white-space: normal; line-height: 1.5; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .tooltip-text::after { content: ''; position: absolute; top: 100%; left: 16px; border: 6px solid transparent; border-top-color: #1e293b; }
+        @keyframes fadeInRow { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        tbody tr { animation: fadeInRow 0.2s ease forwards; }
+        .empty-state { animation: fadeInRow 0.4s ease forwards; }
+        #modalRequisito { transition: opacity 0.2s ease; }
+        #modalRequisito.hidden { opacity: 0; pointer-events: none; }
+        #modalRequisito:not(.hidden) { opacity: 1; }
+        button:active { transform: scale(0.97); }
+        .count-badge { font-family: 'DM Mono', monospace; }
         
-        <form id="formRequisito" class="p-7 space-y-5">
-            <input type="hidden" id="requisitoId">
+        /* Estilo para el buscador interno de normas */
+        .search-norma-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen font-sans antialiased">
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm mb-4">
+                <i class="fas fa-balance-scale text-blue-600 text-xl"></i>
+                <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Entrena Consulting SAS</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
+                Gestor de Matriz Legal <span class="text-blue-600">SG-SST</span>
+            </h1>
+            <p class="text-slate-500 font-medium">Propiedad Horizontal · Consulta Normativa Integrada</p>
+            <div class="flex justify-center gap-2 mt-3">
+                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Decreto 1072</span>
+                <span class="bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Res. 0312</span>
+                <span class="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Ley 9/79</span>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-5 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex items-center gap-3">
+                <button id="btnAgregar" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-plus-circle"></i> Nuevo Requisito
+                </button>
+                <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <span class="text-xs text-slate-500 font-medium">Total registros:</span>
+                    <span id="contadorRegistros" class="count-badge text-blue-700 font-bold text-sm">0</span>
+                </div>
+            </div>
             
-            <div class="relative">
-                <label class="block text-xs font-bold text-blue-600 mb-1.5 uppercase tracking-wider">
-                    <i class="fas fa-magic"></i> Buscador de Normas Sugeridas
-                </label>
-                <input type="text" id="normaSearch" list="listadoNormas" placeholder="Escribe '1072', '0312' o 'Alturas'..." 
-                       class="w-full border-2 border-blue-100 bg-blue-50/30 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all font-medium">
-                <datalist id="listadoNormas">
-                    <option value="Decreto 1072 de 2015">Decreto Único Reglamentario del Sector Trabajo</option>
-                    <option value="Resolución 0312 de 2019">Estándares Mínimos del SG-SST</option>
-                    <option value="Resolución 4272 de 2021">Trabajo Seguro en Alturas</option>
-                    <option value="Ley 1562 de 2012">Sistema General de Riesgos Laborales</option>
-                    <option value="Resolución 2400 de 1979">Estatuto de Seguridad Industrial</option>
-                </datalist>
-                <p class="text-[10px] text-slate-400 mt-1">Selecciona una sugerencia para auto-completar el requisito.</p>
-            </div>
-
-            <hr class="border-slate-100">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase">Norma / Ley</label>
-                    <input type="text" id="norma" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm" readonly>
+            <div class="flex flex-wrap gap-3 items-center">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar en matriz local..." 
+                           class="pl-9 pr-4 py-2.5 border border-slate-300 rounded-xl w-72 focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase">Año</label>
-                    <input type="number" id="anio" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase">Artículo(s) Sugerido(s)</label>
-                <input type="text" id="articulos" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm">
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase">Descripción Técnica</label>
-                <textarea id="descripcion" rows="4" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm resize-none"></textarea>
-            </div>
-
-            <div class="flex justify-end gap-3 pt-4">
-                <button type="button" id="cancelarModal" class="px-5 py-2.5 font-bold text-slate-400 text-sm">Cancelar</button>
-                <button type="submit" class="bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg hover:bg-blue-700 text-sm">
-                    Confirmar e Incluir
+                <select id="filtroAplica" class="border border-slate-300 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 text-slate-600">
+                    <option value="">Todos</option>
+                    <option value="Sí">✔ Aplica</option>
+                    <option value="No">✖ No Aplica</option>
+                    <option value="Parcial">◑ Parcial</option>
+                </select>
+                <button id="btnExportarCSV" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
                 </button>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<script>
-    // BASE DE DATOS DE NORMAS (MOTOR DE BÚSQUEDA)
-    const DB_NORMAS = {
-        "Decreto 1072 de 2015": {
-            anio: 2015,
-            articulos: "Capítulo 6 (Art. 2.2.4.6.1 al 2.2.4.6.37)",
-            desc: "Establece las directrices de obligatorio cumplimiento para implementar el Sistema de Gestión de la Seguridad y Salud en el Trabajo (SG-SST)."
-        },
-        "Resolución 0312 de 2019": {
-            anio: 2019,
-            articulos: "Todo el documento",
-            desc: "Define los estándares mínimos del SG-SST para personas naturales y jurídicas según su número de trabajadores y nivel de riesgo."
-        },
-        "Resolución 4272 de 2021": {
-            anio: 2021,
-            articulos: "Art. 1 - Art. 65",
-            desc: "Establece los requisitos mínimos de seguridad para el desarrollo de trabajo en alturas."
-        },
-        "Ley 1562 de 2012": {
-            anio: 2012,
-            articulos: "Art. 1, 2 y 13",
-            desc: "Modifica el sistema de riesgos laborales y dicta otras disposiciones en materia de salud ocupacional."
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+            <div class="table-container overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-900 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer" data-col="norma">Norma <i class="fas fa-sort ml-1 opacity-50"></i></th>
+                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer" data-col="anio">Año <i class="fas fa-sort ml-1 opacity-50"></i></th>
+                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider">Artículo(s)</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Descripción</th>
+                            <th class="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider cursor-pointer" data-col="aplica">Aplica <i class="fas fa-sort ml-1 opacity-50"></i></th>
+                            <th class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRequisitos" class="bg-white divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                <span id="infoTabla" class="text-xs text-slate-500"></span>
+                <span class="text-xs text-slate-400">💾 Sincronizado con navegador</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalRequisito" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-3xl">
+                <h2 id="modalTitulo" class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-balance-scale"></i> <span></span>
+                </h2>
+                <button id="cerrarModal" class="text-white/70 hover:text-white text-3xl leading-none">&times;</button>
+            </div>
+            <form id="formRequisito" class="p-7 space-y-5" novalidate>
+                <input type="hidden" id="requisitoId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Norma / Ley <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <input type="text" id="norma" placeholder="Ej: Ley 1562" maxlength="80"
+                                   class="w-full border border-slate-300 rounded-xl pl-4 pr-10 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all">
+                            <button type="button" id="btnBuscarWeb" title="Consultar norma en la web"
+                                    class="search-norma-btn text-blue-600 hover:text-blue-800 p-2">
+                                <i class="fas fa-globe-americas"></i>
+                            </button>
+                        </div>
+                        <span class="error-msg text-red-500 text-xs hidden mt-1">Campo obligatorio</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Año <span class="text-red-500">*</span></label>
+                        <input type="number" id="anio" placeholder="Ej: 2012" min="1900" max="2099"
+                               class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                        <span class="error-msg text-red-500 text-xs hidden mt-1">Año inválido</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Artículo(s)</label>
+                    <input type="text" id="articulos" placeholder="Art. 1, Art. 2..." maxlength="100"
+                           class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Descripción / Requisito <span class="text-red-500">*</span></label>
+                    <textarea id="descripcion" rows="4" placeholder="Describa el requisito..." maxlength="500"
+                              class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"></textarea>
+                    <div class="flex justify-between mt-1">
+                        <span class="error-msg text-red-500 text-xs hidden">Campo obligatorio</span>
+                        <span id="charCount" class="text-xs text-slate-400 ml-auto">0/500</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">¿Aplica?</label>
+                        <select id="aplica" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="Sí">✔ Sí</option>
+                            <option value="No">✖ No</option>
+                            <option value="Parcial">◑ Parcial</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Última actualización</label>
+                        <input type="date" id="fechaActualizacion" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" id="cancelarModal" class="px-5 py-2.5 font-bold text-slate-500 text-sm">Cancelar</button>
+                    <button type="submit" class="bg-blue-600 text-white px-7 py-2.5 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all text-sm flex items-center gap-2">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    const STORAGE_KEY = "matrizEntrena_v2";
+    let requisitos = cargarDatos();
+    let sortCol = null; let sortDir = 1;
+
+    function cargarDatos() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : datosIniciales();
+    }
+
+    function guardarDatos(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+    function datosIniciales() {
+        return [
+            { id: genId(), norma: "Decreto 1072", anio: 2015, articulos: "2.2.4.6.12", descripcion: "Mantener la matriz de identificación de peligros y requisitos legales actualizada.", aplica: "Sí", fechaActualizacion: "2024-01-15" },
+            { id: genId(), norma: "Res. 0312", anio: 2019, articulos: "Todos", descripcion: "Estándares mínimos del SG-SST.", aplica: "Sí", fechaActualizacion: "2024-03-10" }
+        ];
+    }
+
+    function genId() { return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`; }
+
+    // ============================================================
+    // MOTOR DE BÚSQUEDA WEB (MEJORA SOLICITADA)
+    // ============================================================
+    document.getElementById("btnBuscarWeb").onclick = async function() {
+        const query = document.getElementById("norma").value.trim();
+        if (!query) {
+            Swal.fire({ text: "Escribe el nombre de una norma para buscar.", icon: "info", toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+            return;
         }
+
+        const iconBtn = this.querySelector('i');
+        iconBtn.className = "fas fa-spinner fa-spin"; // Animación de carga
+
+        // Simulación de búsqueda en base de datos normativa (Aquí podrías usar una API real)
+        setTimeout(() => {
+            const dbNormas = {
+                "ley 1562": { anio: 2012, desc: "Por la cual se modifica el Sistema de Riesgos Laborales y se dictan otras disposiciones en materia de Salud Ocupacional." },
+                "resolucion 0312": { anio: 2019, desc: "Por la cual se definen los Estándares Mínimos del Sistema de Gestión de la Seguridad y Salud en el Trabajo SG-SST." },
+                "resolucion 4272": { anio: 2021, desc: "Requisitos mínimos de seguridad para el desarrollo de trabajo en alturas." },
+                "ley 675": { anio: 2001, desc: "Régimen de propiedad horizontal en Colombia." }
+            };
+
+            const encontrada = dbNormas[query.toLowerCase()];
+
+            if (encontrada) {
+                document.getElementById("anio").value = encontrada.anio;
+                document.getElementById("descripcion").value = encontrada.desc;
+                document.getElementById("charCount").textContent = `${encontrada.desc.length}/500`;
+                Swal.fire({ title: "Norma encontrada", text: "Se han autocompletado los campos.", icon: "success", timer: 1500, showConfirmButton: false });
+            } else {
+                // Si no está en la DB local, abre Google con la búsqueda exacta para facilitar copia/pega
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query + " Colombia norma descripcion")}`, '_blank');
+                Swal.fire({ title: "Buscando en la web...", text: "Hemos abierto una pestaña con los resultados oficiales.", icon: "info", timer: 2000, showConfirmButton: false });
+            }
+            iconBtn.className = "fas fa-globe-americas";
+        }, 800);
     };
 
-    // LÓGICA DEL MOTOR DE BÚSQUEDA
-    document.getElementById('normaSearch').addEventListener('input', function(e) {
-        const seleccion = e.target.value;
-        if (DB_NORMAS[seleccion]) {
-            const info = DB_NORMAS[seleccion];
-            document.getElementById('norma').value = seleccion.split(' de ')[0];
-            document.getElementById('anio').value = info.anio;
-            document.getElementById('articulos').value = info.articulos;
-            document.getElementById('descripcion').value = info.desc;
-            
-            // Efecto visual de éxito
-            this.classList.add('border-emerald-400', 'bg-emerald-50');
-            setTimeout(() => this.classList.remove('border-emerald-400', 'bg-emerald-50'), 1000);
-        }
-    });
+    // ============================================================
+    // RENDERIZADO Y LÓGICA DE TABLA
+    // ============================================================
+    function render() {
+        const search = document.getElementById("searchInput").value.trim().toLowerCase();
+        const filtroA = document.getElementById("filtroAplica").value;
 
-    // ... (Mantén el resto de tus funciones de render, guardar y eliminar igual)
-</script>
+        let filtrados = requisitos.filter(r => {
+            const matchText = !search || r.norma.toLowerCase().includes(search) || r.descripcion.toLowerCase().includes(search);
+            const matchAplica = !filtroA || r.aplica === filtroA;
+            return matchText && matchAplica;
+        });
+
+        const tbody = document.getElementById("tablaRequisitos");
+        tbody.innerHTML = filtrados.length === 0 ? '<tr><td colspan="6" class="py-10 text-center text-slate-400">Sin resultados</td></tr>' : 
+        filtrados.map((r, i) => `
+            <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'} hover:bg-blue-50">
+                <td class="px-6 py-3.5 font-bold text-sm">${r.norma}</td>
+                <td class="px-4 py-3.5 text-slate-600 text-sm font-mono">${r.anio}</td>
+                <td class="px-4 py-3.5 text-slate-500 text-xs">${r.articulos || "—"}</td>
+                <td class="px-6 py-3.5 text-sm text-slate-600 tooltip-cell">
+                    ${r.descripcion.substring(0, 50)}...
+                    <div class="tooltip-text">${r.descripcion}</div>
+                </td>
+                <td class="px-4 py-3.5 text-center">
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold ${r.aplica==='Sí'?'bg-emerald-100 text-emerald-700':'bg-red-100 text-red-600'}">
+                        ${r.aplica}
+                    </span>
+                </td>
+                <td class="px-6 py-3.5 text-center">
+                    <button onclick="editar('${r.id}')" class="text-blue-500 mr-2"><i class="fas fa-edit"></i></button>
+                    <button onclick="eliminar('${r.id}')" class="text-red-400"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        `).join("");
+
+        document.getElementById("contadorRegistros").textContent = requisitos.length;
+        guardarDatos(requisitos);
+    }
+
+    // Eventos y Modal
+    document.getElementById("btnAgregar").onclick = () => {
+        document.getElementById("formRequisito").reset();
+        document.getElementById("requisitoId").value = "";
+        document.querySelector("#modalTitulo span").textContent = "Nuevo Requisito Legal";
+        document.getElementById("modalRequisito").classList.remove("hidden");
+    };
+
+    document.getElementById("cerrarModal").onclick = () => document.getElementById("modalRequisito").classList.add("hidden");
+    document.getElementById("cancelarModal").onclick = () => document.getElementById("modalRequisito").classList.add("hidden");
+
+    window.editar = (id) => {
+        const r = requisitos.find(x => x.id === id);
+        if (!r) return;
+        document.getElementById("requisitoId").value = r.id;
+        document.getElementById("norma").value = r.norma;
+        document.getElementById("anio").value = r.anio;
+        document.getElementById("descripcion").value = r.descripcion;
+        document.getElementById("aplica").value = r.aplica;
+        document.getElementById("modalRequisito").classList.remove("hidden");
+    };
+
+    window.eliminar = (id) => {
+        Swal.fire({ title: "¿Eliminar?", icon: "warning", showCancelButton: true }).then(res => {
+            if (res.isConfirmed) {
+                requisitos = requisitos.filter(x => x.id !== id);
+                render();
+            }
+        });
+    };
+
+    document.getElementById("formRequisito").onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById("requisitoId").value;
+        const data = {
+            id: id || genId(),
+            norma: document.getElementById("norma").value,
+            anio: document.getElementById("anio").value,
+            descripcion: document.getElementById("descripcion").value,
+            articulos: document.getElementById("articulos").value,
+            aplica: document.getElementById("aplica").value,
+            fechaActualizacion: document.getElementById("fechaActualizacion").value
+        };
+        if (id) {
+            const idx = requisitos.findIndex(x => x.id === id);
+            requisitos[idx] = data;
+        } else {
+            requisitos.push(data);
+        }
+        document.getElementById("modalRequisito").classList.add("hidden");
+        render();
+    };
+
+    document.getElementById("searchInput").oninput = render;
+    render();
+    </script>
+</body>
+</html>
