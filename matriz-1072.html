@@ -3,565 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Matriz SG-SST | Entrena Consulting - Requisitos Legales</title>
+    <title>Investigación de Accidentes SG-SST | Colombia | Decreto 1072</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
-        
-        body { font-family: 'DM Sans', sans-serif; }
-        
-        .table-container::-webkit-scrollbar { height: 8px; }
-        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .table-container::-webkit-scrollbar-track { background: #f1f5f9; }
-
-        /* Tooltip para descripciones largas */
-        .tooltip-cell { position: relative; }
-        .tooltip-cell:hover .tooltip-text {
-            display: block;
-        }
-        .tooltip-text {
-            display: none;
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 0;
-            background: #1e293b;
-            color: white;
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            width: 280px;
-            z-index: 50;
-            white-space: normal;
-            line-height: 1.5;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .tooltip-text::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 16px;
-            border: 6px solid transparent;
-            border-top-color: #1e293b;
-        }
-
-        /* Animación de entrada de filas */
-        @keyframes fadeInRow {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        tbody tr { animation: fadeInRow 0.2s ease forwards; }
-
-        /* Estado vacío */
-        .empty-state { animation: fadeInRow 0.4s ease forwards; }
-        
-        /* Modal animación */
-        #modalRequisito { transition: opacity 0.2s ease; }
-        #modalRequisito.hidden { opacity: 0; pointer-events: none; }
-        #modalRequisito:not(.hidden) { opacity: 1; }
-
-        /* Botón activo */
-        button:active { transform: scale(0.97); }
-
-        /* Badge de conteo */
-        .count-badge { font-family: 'DM Mono', monospace; }
+        .step.active { background-color: #1e3a8a; color: white; }
+        .step.completed { background-color: #10b981; color: white; }
+        .cause-card { transition: all 0.2s; }
+        .method-tab { transition: all 0.2s; cursor: pointer; }
+        .method-tab.active { background-color: #2563eb; color: white; border-color: #2563eb; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen font-sans antialiased">
+<body class="bg-gray-100 font-sans p-4 md:p-6">
 
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-
-        <!-- HEADER -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm mb-4">
-                <i class="fas fa-balance-scale text-blue-600 text-xl"></i>
-                <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Entrena Consulting SAS</span>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
-                Gestor de Matriz Legal <span class="text-blue-600">SG-SST</span>
-            </h1>
-            <p class="text-slate-500 font-medium">Propiedad Horizontal · Actualizado automáticamente</p>
-            <div class="flex justify-center gap-2 mt-3">
-                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Decreto 1072</span>
-                <span class="bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Res. 0312</span>
-                <span class="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Ley 9/79</span>
-            </div>
+<div class="max-w-6xl mx-auto">
+    <!-- Cabecera normativa -->
+    <div class="text-center mb-6">
+        <div class="inline-flex items-center gap-3 bg-white shadow-md rounded-full px-6 py-2">
+            <i class="fas fa-clipboard-list text-blue-700"></i>
+            <span class="font-bold text-gray-700">Investigación de Accidentes de Trabajo</span>
+            <i class="fas fa-gavel text-gray-600"></i>
         </div>
-
-        <!-- BARRA DE CONTROLES -->
-        <div class="flex flex-wrap justify-between items-center gap-4 mb-5 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-            <div class="flex items-center gap-3">
-                <button id="btnAgregar" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
-                    <i class="fas fa-plus-circle"></i> Nuevo Requisito
-                </button>
-                <!-- Contador de registros -->
-                <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
-                    <span class="text-xs text-slate-500 font-medium">Total registros:</span>
-                    <span id="contadorRegistros" class="count-badge text-blue-700 font-bold text-sm">0</span>
-                </div>
-            </div>
-            
-            <div class="flex flex-wrap gap-3 items-center">
-                <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar norma, artículo o descripción..." 
-                           class="pl-9 pr-4 py-2.5 border border-slate-300 rounded-xl w-72 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm">
-                </div>
-                <!-- Filtro de Aplica -->
-                <select id="filtroAplica" class="border border-slate-300 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 text-slate-600">
-                    <option value="">Todos</option>
-                    <option value="Sí">✔ Aplica</option>
-                    <option value="No">✖ No Aplica</option>
-                    <option value="Parcial">◑ Parcial</option>
-                </select>
-                <button id="btnExportarCSV" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
-                    <i class="fas fa-file-excel"></i> Exportar Excel
-                </button>
-            </div>
-        </div>
-
-        <!-- TABLA PRINCIPAL -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
-            <div class="table-container overflow-x-auto">
-                <table class="min-w-full divide-y divide-slate-200">
-                    <thead class="bg-slate-900 text-white">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="norma">
-                                Norma <i class="fas fa-sort ml-1 opacity-50"></i>
-                            </th>
-                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="anio">
-                                Año <i class="fas fa-sort ml-1 opacity-50"></i>
-                            </th>
-                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider">Artículo(s)</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Descripción</th>
-                            <th class="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="aplica">
-                                Aplica <i class="fas fa-sort ml-1 opacity-50"></i>
-                            </th>
-                            <th class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaRequisitos" class="bg-white divide-y divide-slate-100">
-                    </tbody>
-                </table>
-            </div>
-            <!-- Footer de tabla con paginación info -->
-            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-                <span id="infoTabla" class="text-xs text-slate-500"></span>
-                <span class="text-xs text-slate-400">💾 Datos guardados localmente</span>
-            </div>
-        </div>
+        <p class="text-sm text-gray-600 mt-2">
+            Decreto 1072 de 2015 (Art. 2.2.4.6.16) – Resolución 0312 de 2019 (Estándar 1.1.3)<br>
+            Metodologías con generación explícita de Causa Raíz.
+        </p>
     </div>
 
-    <!-- MODAL -->
-    <div id="modalRequisito" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-3xl">
-                <h2 id="modalTitulo" class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-balance-scale"></i>
-                    <span></span>
-                </h2>
-                <button id="cerrarModal" class="text-white/70 hover:text-white text-3xl leading-none transition-colors">&times;</button>
+    <!-- Indicador de pasos -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="1">1. Datos</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="2">2. Causas inmediatas</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="3">3. Causas básicas</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="4">4. Análisis (metodología)</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="5">5. Plan de acción</div>
+        <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="6">6. Informe final</div>
+    </div>
+
+    <!-- Contenedor de pasos -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+        <!-- PASO 1: DATOS DEL SUCESO -->
+        <div id="step1" class="step-content p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-info-circle text-blue-600 mr-2"></i>Información obligatoria del accidente</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div><label class="font-semibold">Consecutivo *</label><input type="text" id="consecutivo" class="w-full border rounded p-2" placeholder="INV-001" value="INV-1"></div>
+                <div><label class="font-semibold">Fecha del accidente *</label><input type="date" id="fechaAcc" class="w-full border rounded p-2"></div>
+                <div><label class="font-semibold">Hora *</label><input type="time" id="horaAcc" class="w-full border rounded p-2"></div>
+                <div><label class="font-semibold">Lugar exacto</label><input type="text" id="lugar" class="w-full border rounded p-2" placeholder="Ej. cuarto de bombas"></div>
+                <div><label class="font-semibold">Trabajador afectado (nombre, cargo, ARL)</label><input type="text" id="trabajador" class="w-full border rounded p-2"></div>
+                <div><label class="font-semibold">Empresa empleadora (o contratista)</label><input type="text" id="empresa" class="w-full border rounded p-2"></div>
+                <div><label class="font-semibold">Tipo de suceso</label>
+                    <select id="tipoSuceso" class="w-full border rounded p-2">
+                        <option>Accidente de trabajo con incapacidad</option>
+                        <option>Accidente de trabajo sin incapacidad</option>
+                        <option>Accidente leve (primeros auxilios)</option>
+                        <option>Incidente peligroso (sin lesiones)</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2"><label class="font-semibold">Descripción detallada del accidente *</label><textarea id="descripcionAcc" rows="3" class="w-full border rounded p-2" placeholder="¿Qué pasó? ¿Cómo? ¿Qué hacía? Testigos?"></textarea></div>
+                <div class="md:col-span-2"><label class="font-semibold">Consecuencias (lesiones, días de incapacidad, daños)</label><input type="text" id="consecuencias" class="w-full border rounded p-2"></div>
             </div>
-            <form id="formRequisito" class="p-7 space-y-5" novalidate>
-                <input type="hidden" id="requisitoId">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Norma / Ley <span class="text-red-500">*</span></label>
-                        <input type="text" id="norma" placeholder="Ej: Decreto 1072" maxlength="80"
-                               class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
-                        <span class="error-msg text-red-500 text-xs hidden mt-1">Campo obligatorio</span>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Año <span class="text-red-500">*</span></label>
-                        <input type="number" id="anio" placeholder="Ej: 2019" min="1900" max="2099"
-                               class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
-                        <span class="error-msg text-red-500 text-xs hidden mt-1">Año entre 1900 y 2099</span>
-                    </div>
+            <div class="mt-6 flex justify-end"><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente <i class="fas fa-arrow-right"></i></button></div>
+        </div>
+
+        <!-- PASO 2: CAUSAS INMEDIATAS -->
+        <div id="step2" class="step-content hidden p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-bolt text-yellow-600 mr-2"></i>Causas inmediatas (actos y condiciones subestándar)</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div><label class="font-bold block mb-1">Actos inseguros (comportamientos)</label><textarea id="actosInseguros" rows="4" class="w-full border rounded p-2" placeholder="Ej. No usar bloqueo de energía"></textarea></div>
+                <div><label class="font-bold block mb-1">Condiciones inseguras (entorno/equipos)</label><textarea id="condicionesInseguras" rows="4" class="w-full border rounded p-2" placeholder="Ej. piso resbaloso"></textarea></div>
+            </div>
+            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-arrow-left"></i> Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
+        </div>
+
+        <!-- PASO 3: CAUSAS BÁSICAS -->
+        <div id="step3" class="step-content hidden p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tree text-emerald-700 mr-2"></i>Causas básicas (factores personales y de gestión)</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div><label class="font-bold">Factores personales</label><textarea id="factoresPersonales" rows="3" class="w-full border rounded p-2" placeholder="Falta de entrenamiento, fatiga..."></textarea></div>
+                <div><label class="font-bold">Factores de gestión</label><textarea id="factoresGestion" rows="3" class="w-full border rounded p-2" placeholder="Supervisión débil, ausencia de procedimiento..."></textarea></div>
+            </div>
+            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
+        </div>
+
+        <!-- PASO 4: ANÁLISIS CON METODOLOGÍA SELECCIONABLE -->
+        <div id="step4" class="step-content hidden p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-chart-line text-indigo-600 mr-2"></i>Seleccione la metodología de análisis</h2>
+            <!-- Selector de metodología (pestañas) -->
+            <div class="flex gap-2 mb-6 border-b">
+                <div id="tabFishbone" class="method-tab px-4 py-2 rounded-t-lg border border-b-0 font-semibold bg-blue-100 text-blue-800 active">🐟 Espina de Pescado + 5 Porqués</div>
+                <div id="tabFTA" class="method-tab px-4 py-2 rounded-t-lg border border-b-0 font-semibold bg-gray-100 text-gray-700">🌲 Árbol de Fallas (FTA)</div>
+            </div>
+
+            <!-- Contenido Metodología 1: Espina de Pescado + 5 Porqués -->
+            <div id="methodFishbone" class="method-content">
+                <p class="text-sm text-gray-600 mb-3">Agregue causas potenciales en cada categoría. Luego seleccione la causa principal y responda los 5 porqués. Finalmente, genere la causa raíz.</p>
+                <div id="fishboneContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+                <div class="border-t pt-4 mt-2">
+                    <h3 class="text-md font-bold text-purple-700">5 Porqués</h3>
+                    <label class="block text-sm font-medium mt-2">Causa principal (seleccionada desde la espina):</label>
+                    <select id="causaPrincipalSelect" class="w-full border rounded p-2 mb-3 bg-white">
+                        <option value="">-- Primero agregue causas en el diagrama --</option>
+                    </select>
+                    <div id="porquesContainer" class="space-y-3"></div>
+                    <button id="btnGenerarRaizFishbone" class="mt-4 bg-green-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-sync-alt"></i> Generar causa raíz (desde 5º porqué)</button>
+                    <div id="raizFishboneResultado" class="mt-3 p-3 bg-green-50 border rounded hidden font-semibold"></div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Artículo(s)</label>
-                    <input type="text" id="articulos" placeholder="Ej: Art. 2.2.4.6.12, Art. 5, Todos" maxlength="100"
-                           class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Descripción / Requisito <span class="text-red-500">*</span></label>
-                    <textarea id="descripcion" rows="4" placeholder="Describa el requisito legal aplicable..." maxlength="500"
-                              class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm resize-none transition-all"></textarea>
-                    <div class="flex justify-between mt-1">
-                        <span class="error-msg text-red-500 text-xs hidden">Campo obligatorio</span>
-                        <span id="charCount" class="text-xs text-slate-400 ml-auto">0/500</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">¿Aplica a la empresa?</label>
-                        <select id="aplica" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
-                            <option value="Sí">✔ Sí, aplica</option>
-                            <option value="No">✖ No aplica</option>
-                            <option value="Parcial">◑ Aplica parcialmente</option>
+            </div>
+
+            <!-- Contenido Metodología 2: Árbol de Fallas (FTA) -->
+            <div id="methodFTA" class="method-content hidden">
+                <p class="text-sm text-gray-600 mb-3">Defina el <strong>evento tope</strong> (el accidente) y agregue fallas básicas con relaciones lógicas. Genere la causa raíz según el árbol.</p>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <label class="font-bold block">Evento tope (descripción del accidente):</label>
+                    <input type="text" id="ftaTopEvent" class="w-full border rounded p-2 mb-4" placeholder="Ej. Caída de trabajador en mantenimiento de ascensor">
+                    <label class="font-bold block">Fallas básicas (una por línea):</label>
+                    <textarea id="ftaBasicEvents" rows="4" class="w-full border rounded p-2 mb-2" placeholder="Ej. Falta de arnés&#10;Superficie resbalosa&#10;Ausencia de permiso de trabajo"></textarea>
+                    <div class="mb-3">
+                        <label class="font-bold">Tipo de compuerta lógica (relación entre fallas):</label>
+                        <select id="ftaGate" class="w-full border rounded p-2">
+                            <option value="OR">OR (cualquiera de las fallas produce el evento)</option>
+                            <option value="AND">AND (todas las fallas deben ocurrir simultáneamente)</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Última actualización</label>
-                        <input type="date" id="fechaActualizacion" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                    </div>
+                    <button id="btnGenerarRaizFTA" class="bg-indigo-600 text-white px-4 py-2 rounded-lg"><i class="fas fa-cogs"></i> Generar causa raíz desde FTA</button>
+                    <div id="raizFTAResultado" class="mt-4 p-3 bg-white border rounded hidden"></div>
                 </div>
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="button" id="cancelarModal" class="px-5 py-2.5 font-bold text-slate-500 hover:text-slate-700 text-sm transition-colors">Cancelar</button>
-                    <button type="submit" class="bg-blue-600 text-white px-7 py-2.5 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all text-sm flex items-center gap-2">
-                        <i class="fas fa-save"></i> Guardar
-                    </button>
-                </div>
-            </form>
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button>
+                <button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- PASO 5: PLAN DE ACCIÓN -->
+        <div id="step5" class="step-content hidden p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tasks text-indigo-600 mr-2"></i>Plan de acción correctivo</h2>
+            <div id="accionesContainer" class="space-y-3 mb-4"></div>
+            <button id="addAccionBtn" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus"></i> Agregar acción</button>
+            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Generar informe</button></div>
+        </div>
+
+        <!-- PASO 6: INFORME FINAL -->
+        <div id="step6" class="step-content hidden p-6 md:p-8">
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-file-alt text-red-600 mr-2"></i>Informe final de investigación</h2>
+            <div id="informeFinal" class="bg-gray-50 border rounded-lg p-5 text-sm space-y-4 overflow-auto max-h-[70vh]"></div>
+            <div class="flex flex-wrap gap-3 justify-between mt-6">
+                <button id="exportarBtn" class="bg-green-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-download"></i> Exportar a texto</button>
+                <button id="resetBtn" class="bg-red-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-sync-alt"></i> Nueva investigación</button>
+                <button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-edit"></i> Editar datos</button>
+            </div>
         </div>
     </div>
+    <div class="text-center text-xs text-gray-500 mt-4">Herramienta SG-SST – Decreto 1072 – Resolución 0312 – Con generación explícita de Causa Raíz</div>
+</div>
 
-    <script>
-    // ============================================================
-    //  UTILIDADES DE ALMACENAMIENTO (con manejo de errores)
-    // ============================================================
-    const STORAGE_KEY = "matrizEntrena_v2";
+<script>
+    // ---------- ESTADO GLOBAL ----------
+    let investigation = {
+        consecutivo: "INV-1",
+        basico: { fecha: "", hora: "", lugar: "", trabajador: "", empresa: "", tipo: "", descripcion: "", consecuencias: "" },
+        causasInmediatas: { actos: "", condiciones: "" },
+        causasBasicas: { personales: "", gestion: "" },
+        // Fishbone
+        fishbone: { Personas: [], Procedimientos: [], Equipos: [], Materiales: [], Entorno: [], Medicion: [] },
+        causaPrincipal: "",
+        cincoPorques: ["", "", "", "", ""],
+        // FTA
+        metodologiaActiva: "fishbone", // "fishbone" o "fta"
+        fta: { topEvent: "", basicEvents: [], gate: "OR", rootCause: "" },
+        // Causa raíz generada (unificada)
+        rootCause: "",
+        acciones: []
+    };
 
-    function cargarDatos() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : datosIniciales();
-        } catch (e) {
-            console.warn("localStorage no disponible. Usando datos en memoria.", e);
-            return datosIniciales();
-        }
-    }
+    const categories = ["Personas", "Procedimientos", "Equipos", "Materiales", "Entorno", "Medicion"];
+    const categoryIcons = { Personas: "👥", Procedimientos: "📋", Equipos: "🛠️", Materiales: "📦", Entorno: "🌍", Medicion: "📊" };
 
-    function guardarDatos(data) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        } catch (e) {
-            console.warn("No se pudo guardar en localStorage:", e);
-        }
-    }
+    let currentStep = 1;
+    const stepDivs = {1:document.getElementById("step1"),2:document.getElementById("step2"),3:document.getElementById("step3"),4:document.getElementById("step4"),5:document.getElementById("step5"),6:document.getElementById("step6")};
+    const stepIndicators = document.querySelectorAll(".step");
 
-    function datosIniciales() {
-        return [
-            { id: genId(), norma: "Decreto 1072", anio: 2015, articulos: "2.2.4.6.12", descripcion: "Mantener la matriz de identificación de peligros y requisitos legales actualizada como parte del SG-SST.", aplica: "Sí", fechaActualizacion: "2024-01-15" },
-            { id: genId(), norma: "Res. 0312", anio: 2019, articulos: "Todos", descripcion: "Estándares mínimos del Sistema de Gestión de Seguridad y Salud en el Trabajo para empleadores y contratantes.", aplica: "Sí", fechaActualizacion: "2024-03-10" },
-            { id: genId(), norma: "Ley 9", anio: 1979, articulos: "Art. 84", descripcion: "Código Sanitario Nacional. Obligaciones del empleador en materia de salud ocupacional.", aplica: "Sí", fechaActualizacion: "2023-11-20" },
-            { id: genId(), norma: "Res. 2400", anio: 1979, articulos: "Art. 1-4", descripcion: "Estatuto de Seguridad Industrial. Disposiciones sobre vivienda, higiene y seguridad en los establecimientos de trabajo.", aplica: "Parcial", fechaActualizacion: "2023-09-05" },
-            { id: genId(), norma: "Decreto 1295", anio: 1994, articulos: "Art. 21", descripcion: "Sistema General de Riesgos Laborales. Obligaciones del empleador frente a la afiliación y cotización.", aplica: "Sí", fechaActualizacion: "2024-02-28" },
-        ];
-    }
-
-    function genId() {
-        return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    }
-
-    // ============================================================
-    //  ESTADO DE LA APLICACIÓN
-    // ============================================================
-    let requisitos = cargarDatos();
-    let sortCol = null;
-    let sortDir = 1; // 1 = asc, -1 = desc
-
-    // ============================================================
-    //  RENDERIZADO DE LA TABLA
-    // ============================================================
-    function render() {
-        const search  = document.getElementById("searchInput").value.trim().toLowerCase();
-        const filtroA = document.getElementById("filtroAplica").value;
-
-        let filtrados = requisitos.filter(r => {
-            const matchText = !search ||
-                r.norma.toLowerCase().includes(search) ||
-                r.descripcion.toLowerCase().includes(search) ||
-                (r.articulos || "").toLowerCase().includes(search);
-            const matchAplica = !filtroA || r.aplica === filtroA;
-            return matchText && matchAplica;
+    function updateStepUI() {
+        for(let i=1;i<=6;i++) stepDivs[i].classList.add("hidden");
+        stepDivs[currentStep].classList.remove("hidden");
+        stepIndicators.forEach((el, idx) => {
+            let stepNum = idx+1;
+            el.classList.remove("active","completed");
+            if(stepNum === currentStep) el.classList.add("active");
+            else if(stepNum < currentStep) el.classList.add("completed");
         });
-
-        // Ordenamiento
-        if (sortCol) {
-            filtrados.sort((a, b) => {
-                const va = String(a[sortCol] || "").toLowerCase();
-                const vb = String(b[sortCol] || "").toLowerCase();
-                return va < vb ? -sortDir : va > vb ? sortDir : 0;
-            });
-        }
-
-        const tbody = document.getElementById("tablaRequisitos");
-
-        if (filtrados.length === 0) {
-            tbody.innerHTML = `
-                <tr class="empty-state">
-                    <td colspan="6" class="py-16 text-center">
-                        <div class="flex flex-col items-center gap-3 text-slate-400">
-                            <i class="fas fa-search text-4xl opacity-30"></i>
-                            <p class="font-semibold text-lg">No se encontraron requisitos</p>
-                            <p class="text-sm">Intenta con otros términos de búsqueda o ajusta los filtros</p>
-                        </div>
-                    </td>
-                </tr>`;
-        } else {
-            tbody.innerHTML = filtrados.map((r, i) => {
-                const badgeClass = r.aplica === "Sí"
-                    ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                    : r.aplica === "No"
-                    ? "bg-red-100 text-red-600 border border-red-200"
-                    : "bg-amber-100 text-amber-700 border border-amber-200";
-                const badgeIcon = r.aplica === "Sí" ? "✔" : r.aplica === "No" ? "✖" : "◑";
-
-                const descCorta = r.descripcion.length > 70
-                    ? r.descripcion.slice(0, 70) + "…"
-                    : r.descripcion;
-
-                const rowBg = i % 2 === 0 ? "bg-white" : "bg-slate-50/50";
-
-                return `
-                <tr class="${rowBg} hover:bg-blue-50/60 transition-colors duration-150">
-                    <td class="px-6 py-3.5">
-                        <span class="font-bold text-slate-800 text-sm">${escHtml(r.norma)}</span>
-                    </td>
-                    <td class="px-4 py-3.5 text-slate-600 text-sm font-mono">${escHtml(String(r.anio))}</td>
-                    <td class="px-4 py-3.5 text-slate-500 text-xs">${escHtml(r.articulos || "—")}</td>
-                    <td class="px-6 py-3.5 text-sm text-slate-600 tooltip-cell">
-                        <span class="block">${escHtml(descCorta)}</span>
-                        ${r.descripcion.length > 70 ? `<div class="tooltip-text">${escHtml(r.descripcion)}</div>` : ""}
-                    </td>
-                    <td class="px-4 py-3.5 text-center">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">
-                            ${badgeIcon} ${r.aplica}
-                        </span>
-                    </td>
-                    <td class="px-6 py-3.5 text-center">
-                        <div class="flex items-center justify-center gap-3">
-                            <button onclick="editar('${r.id}')" title="Editar"
-                                    class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
-                                <i class="fas fa-edit text-sm"></i>
-                            </button>
-                            <button onclick="eliminar('${r.id}')" title="Eliminar"
-                                    class="text-red-400 hover:text-red-600 hover:bg-red-50 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
-                                <i class="fas fa-trash text-sm"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`;
-            }).join("");
-        }
-
-        // Actualizar contador e info
-        document.getElementById("contadorRegistros").textContent = requisitos.length;
-        document.getElementById("infoTabla").textContent =
-            filtrados.length === requisitos.length
-                ? `Mostrando ${requisitos.length} requisito${requisitos.length !== 1 ? "s" : ""}`
-                : `Mostrando ${filtrados.length} de ${requisitos.length} requisitos`;
-
-        guardarDatos(requisitos);
-    }
-
-    // Escape HTML para prevenir XSS
-    function escHtml(str) {
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;");
-    }
-
-    // ============================================================
-    //  MODAL
-    // ============================================================
-    function toggleModal(show) {
-        const m = document.getElementById("modalRequisito");
-        m.classList.toggle("hidden", !show);
-    }
-
-    document.getElementById("btnAgregar").onclick = () => {
-        document.getElementById("formRequisito").reset();
-        document.getElementById("requisitoId").value = "";
-        document.querySelector("#modalTitulo span").textContent = "Nuevo Requisito Legal";
-        document.getElementById("fechaActualizacion").value = new Date().toISOString().slice(0, 10);
-        document.getElementById("charCount").textContent = "0/500";
-        clearErrors();
-        toggleModal(true);
-        setTimeout(() => document.getElementById("norma").focus(), 100);
-    };
-
-    window.editar = (id) => {
-        const r = requisitos.find(x => x.id === id);
-        if (!r) return;
-        document.getElementById("requisitoId").value = r.id;
-        document.getElementById("norma").value = r.norma;
-        document.getElementById("anio").value = r.anio;
-        document.getElementById("descripcion").value = r.descripcion;
-        document.getElementById("articulos").value = r.articulos || "";
-        document.getElementById("aplica").value = r.aplica;
-        document.getElementById("fechaActualizacion").value = r.fechaActualizacion || "";
-        document.getElementById("charCount").textContent = `${r.descripcion.length}/500`;
-        document.querySelector("#modalTitulo span").textContent = "Editar Requisito";
-        clearErrors();
-        toggleModal(true);
-    };
-
-    window.eliminar = (id) => {
-        Swal.fire({
-            title: "¿Eliminar este requisito?",
-            text: "Esta acción no se puede deshacer.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#ef4444",
-            cancelButtonColor: "#64748b",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar",
-            borderRadius: "16px"
-        }).then(result => {
-            if (result.isConfirmed) {
-                requisitos = requisitos.filter(x => x.id !== id);
-                render();
-                Swal.fire({ title: "Eliminado", icon: "success", timer: 1200, showConfirmButton: false });
-            }
-        });
-    };
-
-    // Cerrar modal con Escape o clic fuera
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape") toggleModal(false);
-    });
-    document.getElementById("modalRequisito").addEventListener("click", e => {
-        if (e.target === e.currentTarget) toggleModal(false);
-    });
-    document.getElementById("cerrarModal").onclick = () => toggleModal(false);
-    document.getElementById("cancelarModal").onclick = () => toggleModal(false);
-
-    // Contador de caracteres en descripción
-    document.getElementById("descripcion").addEventListener("input", function() {
-        document.getElementById("charCount").textContent = `${this.value.length}/500`;
-    });
-
-    // ============================================================
-    //  VALIDACIÓN DE FORMULARIO
-    // ============================================================
-    function clearErrors() {
-        document.querySelectorAll(".error-msg").forEach(e => e.classList.add("hidden"));
-        document.querySelectorAll("input, textarea").forEach(e => e.classList.remove("border-red-400"));
-    }
-
-    function validateForm() {
-        clearErrors();
-        let valid = true;
-        const norma = document.getElementById("norma");
-        const anio  = document.getElementById("anio");
-        const desc  = document.getElementById("descripcion");
-
-        if (!norma.value.trim()) {
-            norma.classList.add("border-red-400");
-            norma.nextElementSibling.classList.remove("hidden");
-            valid = false;
-        }
-        const anioVal = parseInt(anio.value);
-        if (!anio.value || isNaN(anioVal) || anioVal < 1900 || anioVal > 2099) {
-            anio.classList.add("border-red-400");
-            anio.nextElementSibling.classList.remove("hidden");
-            valid = false;
-        }
-        if (!desc.value.trim()) {
-            desc.classList.add("border-red-400");
-            desc.parentElement.querySelector(".error-msg").classList.remove("hidden");
-            valid = false;
-        }
-        return valid;
-    }
-
-    document.getElementById("formRequisito").onsubmit = (e) => {
-        e.preventDefault();
-        if (!validateForm()) return;
-
-        const id = document.getElementById("requisitoId").value;
-        const data = {
-            id: id || genId(),
-            norma: document.getElementById("norma").value.trim(),
-            anio: parseInt(document.getElementById("anio").value),
-            descripcion: document.getElementById("descripcion").value.trim(),
-            articulos: document.getElementById("articulos").value.trim(),
-            aplica: document.getElementById("aplica").value,
-            fechaActualizacion: document.getElementById("fechaActualizacion").value
-        };
-
-        if (id) {
-            const idx = requisitos.findIndex(x => x.id === id);
-            if (idx !== -1) requisitos[idx] = data;
-        } else {
-            requisitos.push(data);
-        }
-
-        toggleModal(false);
-        render();
-        Swal.fire({
-            title: id ? "Actualizado correctamente" : "Requisito agregado",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false
-        });
-    };
-
-    // ============================================================
-    //  EXPORTACIÓN EXCEL / CSV (UTF-8 BOM para tildes en Excel)
-    // ============================================================
-    document.getElementById("btnExportarCSV").onclick = () => {
-        const headers = ["Norma", "Año", "Artículo(s)", "Descripción", "Aplica", "Última Actualización"];
-        // BOM UTF-8 + sep=; para que Excel abra con columnas correctas en español
-        const BOM = "\uFEFF";
-        let csv = BOM + "sep=;\n" + headers.join(";") + "\n";
-
-        requisitos.forEach(r => {
-            const cols = [
-                r.norma,
-                r.anio,
-                r.articulos || "",
-                r.descripcion,
-                r.aplica,
-                r.fechaActualizacion || ""
-            ].map(v => `"${String(v).replace(/"/g, '""')}"`);
-            csv += cols.join(";") + "\n";
-        });
-
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Matriz_Legal_SST_${new Date().toISOString().slice(0,10)}.csv`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    };
-
-    // ============================================================
-    //  ORDENAMIENTO POR COLUMNA
-    // ============================================================
-    document.querySelectorAll("th[data-col]").forEach(th => {
-        th.addEventListener("click", () => {
-            const col = th.dataset.col;
-            if (sortCol === col) {
-                sortDir *= -1;
+        if(currentStep === 4) {
+            renderFishbone();
+            actualizarSelectCausa();
+            render5PorquesUI();
+            // sincronizar metodología activa
+            if(investigation.metodologiaActiva === "fishbone") {
+                document.getElementById("methodFishbone").classList.remove("hidden");
+                document.getElementById("methodFTA").classList.add("hidden");
+                document.getElementById("tabFishbone").classList.add("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFTA").classList.remove("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFTA").classList.add("bg-gray-100","text-gray-700");
+                if(investigation.rootCause && investigation.metodologiaActiva==="fishbone") {
+                    document.getElementById("raizFishboneResultado").innerHTML = `Causa raíz generada: ${investigation.rootCause}`;
+                    document.getElementById("raizFishboneResultado").classList.remove("hidden");
+                } else {
+                    document.getElementById("raizFishboneResultado").classList.add("hidden");
+                }
             } else {
-                sortCol = col;
-                sortDir = 1;
+                document.getElementById("methodFTA").classList.remove("hidden");
+                document.getElementById("methodFishbone").classList.add("hidden");
+                document.getElementById("tabFTA").classList.add("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFishbone").classList.remove("active","bg-blue-100","text-blue-800");
+                document.getElementById("tabFishbone").classList.add("bg-gray-100","text-gray-700");
+                // cargar datos FTA en UI
+                document.getElementById("ftaTopEvent").value = investigation.fta.topEvent;
+                document.getElementById("ftaBasicEvents").value = investigation.fta.basicEvents.join("\n");
+                document.getElementById("ftaGate").value = investigation.fta.gate;
+                if(investigation.fta.rootCause) {
+                    document.getElementById("raizFTAResultado").innerHTML = `<div class="bg-green-50 p-2 rounded">Causa raíz: ${investigation.fta.rootCause}</div>`;
+                    document.getElementById("raizFTAResultado").classList.remove("hidden");
+                } else {
+                    document.getElementById("raizFTAResultado").classList.add("hidden");
+                }
             }
-            // Actualizar iconos
-            document.querySelectorAll("th[data-col] i").forEach(i => {
-                i.className = "fas fa-sort ml-1 opacity-50";
+        }
+        if(currentStep === 5) renderAcciones();
+        if(currentStep === 6) mostrarInforme();
+    }
+
+    // Guardado de pasos
+    function saveStep1() {
+        investigation.consecutivo = document.getElementById("consecutivo").value;
+        investigation.basico = {
+            fecha: document.getElementById("fechaAcc").value,
+            hora: document.getElementById("horaAcc").value,
+            lugar: document.getElementById("lugar").value,
+            trabajador: document.getElementById("trabajador").value,
+            empresa: document.getElementById("empresa").value,
+            tipo: document.getElementById("tipoSuceso").value,
+            descripcion: document.getElementById("descripcionAcc").value,
+            consecuencias: document.getElementById("consecuencias").value
+        };
+        if(!investigation.basico.fecha || !investigation.basico.descripcion) {
+            Swal.fire("Datos incompletos","La fecha y la descripción son obligatorias","warning");
+            return false;
+        }
+        return true;
+    }
+    function saveStep2() {
+        investigation.causasInmediatas.actos = document.getElementById("actosInseguros").value;
+        investigation.causasInmediatas.condiciones = document.getElementById("condicionesInseguras").value;
+        return true;
+    }
+    function saveStep3() {
+        investigation.causasBasicas.personales = document.getElementById("factoresPersonales").value;
+        investigation.causasBasicas.gestion = document.getElementById("factoresGestion").value;
+        return true;
+    }
+    function saveStep4() {
+        // Ya se guarda en tiempo real
+        return true;
+    }
+
+    // ---------------- ESPINA DE PESCADO ----------------
+    function renderFishbone() {
+        const container = document.getElementById("fishboneContainer");
+        if(!container) return;
+        container.innerHTML = "";
+        for(let cat of categories) {
+            const causes = investigation.fishbone[cat];
+            const card = document.createElement("div");
+            card.className = "bg-gray-50 rounded-xl p-3 border border-gray-200 cause-card";
+            card.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-bold text-gray-700">${categoryIcons[cat]} ${cat}</h4>
+                    <button class="addCauseBtn text-blue-600 text-sm" data-cat="${cat}"><i class="fas fa-plus-circle"></i> Agregar</button>
+                </div>
+                <div id="causesList-${cat}" class="space-y-1 min-h-[70px]">
+                    ${causes.map((c, idx) => `
+                        <div class="bg-white rounded p-1 flex justify-between items-center text-sm">
+                            <span>${escapeHtml(c)}</span>
+                            <button class="removeCauseBtn text-red-500 text-xs" data-cat="${cat}" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `).join("")}
+                    ${causes.length === 0 ? '<p class="text-gray-400 text-xs italic">Sin causas</p>' : ''}
+                </div>
+                <div class="mt-2 flex gap-1">
+                    <input type="text" id="newCauseInput-${cat}" class="w-full border rounded text-sm p-1" placeholder="Nueva causa...">
+                    <button class="quickAddBtn bg-gray-200 px-2 rounded" data-cat="${cat}"><i class="fas fa-check"></i></button>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+        // Eventos dinámicos
+        document.querySelectorAll(".addCauseBtn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const cat = btn.getAttribute("data-cat");
+                const input = document.getElementById(`newCauseInput-${cat}`);
+                const val = input.value.trim();
+                if(val) { investigation.fishbone[cat].push(val); input.value = ""; renderFishbone(); actualizarSelectCausa(); }
+                else Swal.fire("Campo vacío","Escriba una causa","info");
             });
-            th.querySelector("i").className = `fas fa-sort-${sortDir === 1 ? "up" : "down"} ml-1 text-blue-300`;
-            render();
         });
-    });
+        document.querySelectorAll(".quickAddBtn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const cat = btn.getAttribute("data-cat");
+                const input = document.getElementById(`newCauseInput-${cat}`);
+                const val = input.value.trim();
+                if(val) { investigation.fishbone[cat].push(val); input.value = ""; renderFishbone(); actualizarSelectCausa(); }
+            });
+        });
+        document.querySelectorAll(".removeCauseBtn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const cat = btn.getAttribute("data-cat");
+                const idx = parseInt(btn.getAttribute("data-idx"));
+                investigation.fishbone[cat].splice(idx,1);
+                renderFishbone();
+                actualizarSelectCausa();
+            });
+        });
+    }
 
-    // ============================================================
-    //  LISTENERS DE BÚSQUEDA Y FILTRO
-    // ============================================================
-    document.getElementById("searchInput").addEventListener("input", render);
-    document.getElementById("filtroAplica").addEventListener("change", render);
+    function actualizarSelectCausa() {
+        const select = document.getElementById("causaPrincipalSelect");
+        if(!select) return;
+        let all = [];
+        for(let cat of categories) {
+            investigation.fishbone[cat].forEach(c => all.push(`[${cat}] ${c}`));
+        }
+        if(all.length === 0) { select.innerHTML = '<option value="">-- No hay causas en el diagrama --</option>'; return; }
+        select.innerHTML = '<option value="">-- Seleccione causa principal --</option>' + all.map(c => `<option value="${escapeHtml(c)}" ${investigation.causaPrincipal === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join("");
+        select.onchange = (e) => { investigation.causaPrincipal = e.target.value; render5PorquesUI(); };
+    }
 
-    // ============================================================
-    //  INICIALIZACIÓN
-    // ============================================================
-    render();
-    </script>
+    function render5PorquesUI() {
+        const container = document.getElementById("porquesContainer");
+        if(!container) return;
+        if(!investigation.causaPrincipal) {
+            container.innerHTML = `<div class="bg-yellow-50 p-3 rounded text-yellow-800 text-sm">⚠️ Seleccione una causa principal en el menú desplegable.</div>`;
+            return;
+        }
+        let html = `<p class="font-semibold">Causa a analizar: <span class="bg-gray-200 px-2 py-1 rounded">${escapeHtml(investigation.causaPrincipal)}</span></p>`;
+        for(let i=1;i<=5;i++) {
+            html += `<div><label class="block text-sm font-medium">${i}° Porqué:</label>
+                     <textarea id="why${i}" rows="2" class="w-full border rounded p-2">${investigation.cincoPorques[i-1] || ""}</textarea></div>`;
+        }
+        container.innerHTML = html;
+        for(let i=1;i<=5;i++) {
+            const ta = document.getElementById(`why${i}`);
+            if(ta) ta.addEventListener("input", (e) => { investigation.cincoPorques[i-1] = e.target.value; });
+        }
+    }
+
+    // Generar causa raíz desde 5 porqués
+    function generarRaizFishbone() {
+        if(!investigation.causaPrincipal) {
+            Swal.fire("Error","No ha seleccionado una causa principal","error");
+            return;
+        }
+        const quinto = investigation.cincoPorques[4];
+        if(!quinto || quinto.trim() === "") {
+            Swal.fire("Incompleto","Debe responder el 5º porqué para definir la causa raíz","warning");
+            return;
+        }
+        const root = `[Análisis 5 porqués] Partiendo de la causa "${investigation.causaPrincipal}", la causa raíz identificada es: ${quinto}`;
+        investigation.rootCause = root;
+        document.getElementById("raizFishboneResultado").innerHTML = `✅ Causa raíz generada: ${root}`;
+        document.getElementById("raizFishboneResultado").classList.remove("hidden");
+        Swal.fire("Causa raíz","Guardada correctamente","success");
+    }
+
+    // ---------------- ÁRBOL DE FALLAS (FTA) ----------------
+    function generarRaizFTA() {
+        const top = document.getElementById("ftaTopEvent").value.trim();
+        const basicRaw = document.getElementById("ftaBasicEvents").value;
+        const basic = basicRaw.split(/\r?\n/).filter(l => l.trim().length > 0);
+        const gate = document.getElementById("ftaGate").value;
+        if(!top || basic.length === 0) {
+            Swal.fire("Datos insuficientes","Defina el evento tope y al menos una falla básica","warning");
+            return;
+        }
+        investigation.fta.topEvent = top;
+        investigation.fta.basicEvents = basic;
+        investigation.fta.gate = gate;
+        let rootCause = "";
+        if(gate === "OR") {
+            rootCause = `[Árbol de Fallas] Evento tope: "${top}". Ocurre por cualquiera de: ${basic.join(", ")}. Causa raíz prioritaria: ${basic[0]}.`;
+        } else {
+            rootCause = `[Árbol de Fallas] Evento tope: "${top}". Requiere la ocurrencia simultánea de: ${basic.join(" Y ")}. Causa raíz: combinación de todas las fallas.`;
+        }
+        investigation.fta.rootCause = rootCause;
+        investigation.rootCause = rootCause;
+        document.getElementById("raizFTAResultado").innerHTML = `<div class="bg-green-50 p-2 rounded">✅ Causa raíz generada: ${rootCause}</div>`;
+        document.getElementById("raizFTAResultado").classList.remove("hidden");
+        Swal.fire("Causa raíz","Generada desde el árbol de fallas","success");
+    }
+
+    // ---------------- PLAN DE ACCIÓN ----------------
+    function renderAcciones() {
+        const container = document.getElementById("accionesContainer");
+        if(!container) return;
+        container.innerHTML = "";
+        investigation.acciones.forEach((acc, idx) => {
+            const div = document.createElement("div");
+            div.className = "bg-gray-100 p-3 rounded-lg border flex flex-wrap gap-2 items-center";
+            div.innerHTML = `
+                <div class="flex-1"><input type="text" placeholder="Acción" class="w-full p-1 border rounded acc-desc-${idx}" value="${escapeHtml(acc.descripcion)}"></div>
+                <div class="w-40"><input type="text" placeholder="Responsable" class="w-full p-1 border rounded acc-resp-${idx}" value="${escapeHtml(acc.responsable)}"></div>
+                <div class="w-36"><input type="date" class="w-full p-1 border rounded acc-fecha-${idx}" value="${acc.fecha}"></div>
+                <button class="removeAccion text-red-600" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+            `;
+            container.appendChild(div);
+        });
+        investigation.acciones.forEach((_, idx) => {
+            const d = document.querySelector(`.acc-desc-${idx}`); if(d) d.addEventListener("change", e => investigation.acciones[idx].descripcion = e.target.value);
+            const r = document.querySelector(`.acc-resp-${idx}`); if(r) r.addEventListener("change", e => investigation.acciones[idx].responsable = e.target.value);
+            const f = document.querySelector(`.acc-fecha-${idx}`); if(f) f.addEventListener("change", e => investigation.acciones[idx].fecha = e.target.value);
+        });
+        document.querySelectorAll(".removeAccion").forEach(btn => {
+            btn.addEventListener("click", e => { const idx = parseInt(btn.getAttribute("data-idx")); investigation.acciones.splice(idx,1); renderAcciones(); });
+        });
+    }
+    function addAccion() { investigation.acciones.push({ descripcion: "", responsable: "", fecha: "" }); renderAcciones(); }
+
+    // ---------------- INFORME FINAL ----------------
+    function generarInformeHTML() {
+        const b = investigation.basico;
+        const dentroPlazo = (() => {
+            if(!b.fecha) return "No verificado";
+            const diff = (new Date() - new Date(b.fecha)) / (1000*3600*24);
+            return diff <= 15 ? "✔️ Dentro del plazo (≤15 días)" : "⚠️ FUERA DE PLAZO";
+        })();
+        let analisisHtml = "";
+        if(investigation.metodologiaActiva === "fishbone") {
+            let fishRes = "";
+            for(let cat of categories) if(investigation.fishbone[cat].length) fishRes += `<li><strong>${cat}:</strong> ${investigation.fishbone[cat].join(", ")}</li>`;
+            const porques = investigation.cincoPorques.map((p,i)=>`<li><strong>${i+1}°:</strong> ${p || "No respondido"}</li>`).join("");
+            analisisHtml = `<div><strong>🐟 Espina de Pescado:</strong><ul>${fishRes || "<li>No registrada</li>"}</ul></div>
+                            <div><strong>🔍 5 Porqués (causa principal: ${escapeHtml(investigation.causaPrincipal || "Ninguna")}):</strong><ul>${porques}</ul></div>
+                            <div><strong>📌 Causa raíz generada:</strong> ${investigation.rootCause || "No se ha generado la causa raíz. Use el botón correspondiente en el paso 4."}</div>`;
+        } else {
+            const fta = investigation.fta;
+            analisisHtml = `<div><strong>🌲 Árbol de Fallas (FTA):</strong><br>Evento tope: ${escapeHtml(fta.topEvent || "No definido")}<br>
+                            Fallas básicas: ${fta.basicEvents.join(", ")}<br>Compuerta: ${fta.gate === "OR" ? "OR (cualquiera)" : "AND (todas)"}<br>
+                            <strong>Causa raíz generada:</strong> ${investigation.rootCause || fta.rootCause || "No se ha generado la causa raíz. Use el botón correspondiente en el paso 4."}</div>`;
+        }
+        const accionesHtml = investigation.acciones.map(a => `<li>📌 ${escapeHtml(a.descripcion)} – Resp: ${escapeHtml(a.responsable)} – Fecha: ${a.fecha || "Sin fecha"}</li>`).join("");
+        return `
+            <div class="border-l-8 border-blue-700 pl-4 space-y-3">
+                <div><strong>Consecutivo:</strong> ${escapeHtml(investigation.consecutivo)}</div>
+                <div><strong>Fecha:</strong> ${b.fecha} ${b.hora} – Lugar: ${b.lugar}</div>
+                <div><strong>Trabajador:</strong> ${b.trabajador} – Empresa: ${b.empresa}</div>
+                <div><strong>Descripción:</strong> ${b.descripcion}<br><strong>Consecuencias:</strong> ${b.consecuencias}</div>
+                <div><strong>⚡ Causas inmediatas:</strong><br>Actos: ${investigation.causasInmediatas.actos || "Ninguno"}<br>Condiciones: ${investigation.causasInmediatas.condiciones || "Ninguna"}</div>
+                <div><strong>🌿 Causas básicas:</strong><br>Personales: ${investigation.causasBasicas.personales || "N/R"}<br>Gestión: ${investigation.causasBasicas.gestion || "N/R"}</div>
+                ${analisisHtml}
+                <div><strong>✅ Plan de acción:</strong><ul>${accionesHtml || "<li>No definido</li>"}</ul></div>
+                <div><strong>⚖️ Veredicto:</strong> El accidente fue PREVENIBLE. Se debe implementar el plan de acción y socializar el informe a todos los trabajadores y contratistas.</div>
+                <div class="text-xs text-gray-500">${dentroPlazo} – Fecha del informe: ${new Date().toLocaleDateString()}</div>
+            </div>
+        `;
+    }
+    function mostrarInforme() { document.getElementById("informeFinal").innerHTML = generarInformeHTML(); }
+    function exportarInforme() {
+        const txt = document.getElementById("informeFinal").innerText;
+        const blob = new Blob([txt], {type:"text/plain"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `investigacion_${investigation.consecutivo}.txt`;
+        a.click(); URL.revokeObjectURL(a.href);
+        Swal.fire("Exportado","Informe descargado","success");
+    }
+
+    // ---------------- NAVEGACIÓN Y EVENTOS ----------------
+    function init() {
+        // Datos de ejemplo
+        document.getElementById("consecutivo").value = "INV-2026-01";
+        document.getElementById("fechaAcc").value = "2026-04-10";
+        document.getElementById("horaAcc").value = "09:30";
+        document.getElementById("lugar").value = "Cuarto de bombas";
+        document.getElementById("trabajador").value = "Carlos Pérez - Técnico - ARL Sura";
+        document.getElementById("empresa").value = "Mantenimientos Hidráulicos SAS";
+        document.getElementById("descripcionAcc").value = "Cortada en mano por no usar bloqueo de energía";
+        document.getElementById("consecuencias").value = "8 días incapacidad";
+        document.getElementById("actosInseguros").value = "No usó guantes, omitió bloqueo";
+        document.getElementById("condicionesInseguras").value = "Iluminación deficiente";
+        document.getElementById("factoresPersonales").value = "Falta de entrenamiento";
+        document.getElementById("factoresGestion").value = "Supervisión débil";
+        investigation.fishbone = { Personas: ["Falta de entrenamiento"], Procedimientos: ["Sin permiso"], Equipos: ["Herramienta inadecuada"], Materiales: [], Entorno: [], Medicion: [] };
+        investigation.cincoPorques = ["No había procedimiento","No lo exigió la copropiedad","Contrato sin cláusulas SST","Administración no supervisa","Falta cultura preventiva"];
+        investigation.causaPrincipal = "[Procedimientos] Sin permiso";
+        investigation.acciones = [{ descripcion: "Implementar permiso de trabajo", responsable: "Admin", fecha: "2026-05-15" }];
+        investigation.fta = { topEvent: "Caída desde escalera", basicEvents: ["Falta de arnés","Superficie resbalosa"], gate: "OR", rootCause: "" };
+        saveStep1(); saveStep2(); saveStep3();
+
+        // Selector de metodología
+        document.getElementById("tabFishbone").onclick = () => { investigation.metodologiaActiva = "fishbone"; updateStepUI(); };
+        document.getElementById("tabFTA").onclick = () => { investigation.metodologiaActiva = "fta"; updateStepUI(); };
+
+        // Botones Generar Causa Raíz
+        document.getElementById("btnGenerarRaizFishbone")?.addEventListener("click", generarRaizFishbone);
+        document.getElementById("btnGenerarRaizFTA")?.addEventListener("click", generarRaizFTA);
+
+        document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => {
+            let ok = true;
+            if(currentStep === 1) ok = saveStep1();
+            else if(currentStep === 2) ok = saveStep2();
+            else if(currentStep === 3) ok = saveStep3();
+            else if(currentStep === 4) ok = saveStep4();
+            if(ok && currentStep < 6) { currentStep++; updateStepUI(); }
+        }));
+        document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => {
+            if(currentStep === 2) saveStep1();
+            if(currentStep === 3) saveStep2();
+            if(currentStep === 4) saveStep3();
+            if(currentStep === 5) saveStep4();
+            if(currentStep > 1) { currentStep--; updateStepUI(); }
+        }));
+        stepIndicators.forEach(ind => ind.addEventListener("click", () => {
+            let t = parseInt(ind.getAttribute("data-step"));
+            if(t > currentStep) Swal.fire("Siga el orden","Complete los pasos anteriores","info");
+            else { currentStep = t; updateStepUI(); }
+        }));
+        document.getElementById("addAccionBtn")?.addEventListener("click", addAccion);
+        document.getElementById("exportarBtn")?.addEventListener("click", exportarInforme);
+        document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("¿Borrar todo?")) location.reload(); });
+        updateStepUI();
+    }
+    function escapeHtml(s) { if(!s) return ""; return s.replace(/[&<>]/g, m => m==='&'? '&amp;' : m==='<'? '&lt;' : '&gt;'); }
+    init();
+</script>
 </body>
 </html>
