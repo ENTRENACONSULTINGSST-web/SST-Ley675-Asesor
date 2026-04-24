@@ -357,6 +357,138 @@
   function escapeHtml(str) { if(!str) return ""; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
   init();
+  <script>
+
+// TODO TU CODIGO ACTUAL
+init();
+
+
+// 👇👇👇 PEGA AQUÍ 👇👇👇
+
+// ==========================================
+// MOTOR INTELIGENTE DE ANÁLISIS SST
+// ==========================================
+
+function clasificarIshikawa(texto){
+  texto = texto.toLowerCase();
+
+  if(texto.includes("procedimiento")) return "Metodo";
+  if(texto.includes("trabajador") || texto.includes("no uso")) return "Mano de obra";
+  if(texto.includes("equipo") || texto.includes("herramienta")) return "Maquina";
+  if(texto.includes("iluminación") || texto.includes("ruido")) return "Medio ambiente";
+  if(texto.includes("guantes") || texto.includes("insumo")) return "Material";
+
+  return "Medicion";
+}
+
+function autoIshikawa(){
+  const actos = document.getElementById("actosInseguros")?.value || "";
+  const condiciones = document.getElementById("condicionesInseguras")?.value || "";
+
+  let causas = [];
+
+  [actos, condiciones].forEach(txt => {
+    if(txt.length > 5){
+      causas.push({
+        texto: txt,
+        categoria: clasificarIshikawa(txt)
+      });
+    }
+  });
+
+  return causas;
+}
+
+function analizar5Porques(){
+  let respuestas = [];
+
+  for(let i=1;i<=5;i++){
+    let val = document.getElementById(`why${i}`)?.value || "";
+    if(val) respuestas.push(val.toLowerCase());
+  }
+
+  let causaRaiz = "No determinada";
+
+  for(let r of respuestas){
+    if(r.includes("falta") || r.includes("no hay")){
+      causaRaiz = r;
+    }
+  }
+
+  return {cadena: respuestas, raiz: causaRaiz};
+}
+
+function validarAuditoriaPro(){
+
+  const ishikawa = autoIshikawa();
+  const porques = analizar5Porques();
+
+  let score = 0;
+  let errores = [];
+
+  if(ishikawa.length >= 2) score += 25;
+  else errores.push("Faltan causas inmediatas");
+
+  if(porques.cadena.length >= 3) score += 25;
+  else errores.push("5 porqués incompleto");
+
+  if(porques.raiz !== "No determinada") score += 25;
+  else errores.push("No hay causa raíz clara");
+
+  if(ishikawa.some(c=>c.categoria==="Metodo" || c.categoria==="Mano de obra"))
+    score += 25;
+  else errores.push("Sin clasificación técnica");
+
+  let nivel =
+    score >= 80 ? "CUMPLE AUDITORÍA" :
+    score >= 60 ? "ACEPTABLE" :
+    "NO CUMPLE";
+
+  mostrarAuditoriaUI(score, nivel, errores, porques.raiz);
+}
+
+function mostrarAuditoriaUI(score, nivel, errores, raiz){
+
+  let cont = document.getElementById("resultadoAuditoria");
+
+  if(!cont){
+    cont = document.createElement("div");
+    cont.id = "resultadoAuditoria";
+    document.body.appendChild(cont);
+  }
+
+  cont.innerHTML = `
+  <div style="margin-top:20px;padding:15px;border:1px solid #ccc;border-radius:10px;background:#fff">
+    <h3>Evaluación Auditoría</h3>
+    <p><b>Puntaje:</b> ${score}%</p>
+    <p><b>Resultado:</b> ${nivel}</p>
+    <p><b>Causa raíz:</b> ${raiz}</p>
+    ${errores.length ? errores.map(e=>`<div style="color:red">• ${e}</div>`).join("") : `<div style="color:green">✔ Cumple</div>`}
+  </div>
+  `;
+}
+
+
+// BOTÓN AUTOMÁTICO
+window.addEventListener("load", ()=>{
+  const btn = document.createElement("button");
+  btn.innerText = "Validar Auditoría";
+  btn.style.marginTop = "15px";
+  btn.style.padding = "10px";
+  btn.style.background = "#1e40af";
+  btn.style.color = "white";
+  btn.style.borderRadius = "8px";
+
+  btn.onclick = validarAuditoriaPro;
+
+  document.body.appendChild(btn);
+});
+
+
+// 👆👆👆 FIN DEL BLOQUE
+
 </script>
+  </script>
 </body>
 </html>
+
