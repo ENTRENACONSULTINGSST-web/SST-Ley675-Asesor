@@ -3,419 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Matriz SG-SST | Copropiedad - Requisitos Legales (Decreto 1072)</title>
-    <!-- Tailwind CSS + FontAwesome -->
+    <title>Matriz SG-SST | Entrena Consulting - Requisitos Legales</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- SweetAlert2 para alertas más amigables (opcional pero mejora UX) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Estilos personalizados para scroll y transiciones */
-        .table-container::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+        
+        body { font-family: 'DM Sans', sans-serif; }
+        
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f5f9; }
+
+        /* Tooltip para descripciones largas */
+        .tooltip-cell { position: relative; }
+        .tooltip-cell:hover .tooltip-text {
+            display: block;
         }
-        .table-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .tooltip-text {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 0;
+            background: #1e293b;
+            color: white;
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 280px;
+            z-index: 50;
+            white-space: normal;
+            line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        .table-container::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
+        .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 16px;
+            border: 6px solid transparent;
+            border-top-color: #1e293b;
         }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            transition: all 0.2s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+        /* Animación de entrada de filas */
+        @keyframes fadeInRow {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        input, select, textarea {
-            transition: all 0.2s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #2c7da0;
-            ring: 2px solid #2c7da0;
-            outline: none;
-        }
+        tbody tr { animation: fadeInRow 0.2s ease forwards; }
+
+        /* Estado vacío */
+        .empty-state { animation: fadeInRow 0.4s ease forwards; }
+        
+        /* Modal animación */
+        #modalRequisito { transition: opacity 0.2s ease; }
+        #modalRequisito.hidden { opacity: 0; pointer-events: none; }
+        #modalRequisito:not(.hidden) { opacity: 1; }
+
+        /* Botón activo */
+        button:active { transform: scale(0.97); }
+
+        /* Badge de conteo */
+        .count-badge { font-family: 'DM Mono', monospace; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 font-sans antialiased">
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen font-sans antialiased">
 
-    <div class="container mx-auto px-4 py-6 max-w-7xl">
-        <!-- Header -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+
+        <!-- HEADER -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 inline-flex items-center gap-3">
-                <i class="fas fa-gavel text-indigo-600"></i>
-                Matriz de Requisitos Legales SG-SST
+            <div class="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-6 py-3 shadow-sm mb-4">
+                <i class="fas fa-balance-scale text-blue-600 text-xl"></i>
+                <span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Entrena Consulting SAS</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
+                Gestor de Matriz Legal <span class="text-blue-600">SG-SST</span>
             </h1>
-            <p class="text-gray-600 mt-2">Copropiedad • 114 apartamentos • 10.000 m²</p>
-            <p class="text-sm text-gray-500 mt-1">Decreto 1072 de 2015, Artículo 2.2.4.6.12 – Actualización automática</p>
+            <p class="text-slate-500 font-medium">Propiedad Horizontal · Actualizado automáticamente</p>
             <div class="flex justify-center gap-2 mt-3">
-                <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">📌 Gestión de contratistas</span>
-                <span class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">🔄 PHVA</span>
-                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">⚖️ Cumplimiento legal</span>
+                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Decreto 1072</span>
+                <span class="bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Res. 0312</span>
+                <span class="bg-violet-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Ley 9/79</span>
             </div>
         </div>
 
-        <!-- Panel de acciones rápidas -->
-        <div class="flex flex-wrap justify-between items-center gap-3 mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <button id="btnAgregar" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-5 rounded-lg shadow transition flex items-center gap-2">
-                <i class="fas fa-plus-circle"></i> Nuevo requisito
-            </button>
+        <!-- BARRA DE CONTROLES -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-5 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex items-center gap-3">
+                <button id="btnAgregar" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-plus-circle"></i> Nuevo Requisito
+                </button>
+                <!-- Contador de registros -->
+                <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+                    <span class="text-xs text-slate-500 font-medium">Total registros:</span>
+                    <span id="contadorRegistros" class="count-badge text-blue-700 font-bold text-sm">0</span>
+                </div>
+            </div>
+            
             <div class="flex flex-wrap gap-3 items-center">
                 <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar por norma, año o descripción..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-lg w-64 focus:border-indigo-400">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar norma, artículo o descripción..." 
+                           class="pl-9 pr-4 py-2.5 border border-slate-300 rounded-xl w-72 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm">
                 </div>
-                <button id="btnExportarCSV" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg shadow transition flex items-center gap-2">
-                    <i class="fas fa-file-csv"></i> Exportar CSV
-                </button>
-                <button id="btnLimpiarFiltro" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg shadow transition flex items-center gap-2">
-                    <i class="fas fa-undo-alt"></i> Limpiar
+                <!-- Filtro de Aplica -->
+                <select id="filtroAplica" class="border border-slate-300 rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 text-slate-600">
+                    <option value="">Todos</option>
+                    <option value="Sí">✔ Aplica</option>
+                    <option value="No">✖ No Aplica</option>
+                    <option value="Parcial">◑ Parcial</option>
+                </select>
+                <button id="btnExportarCSV" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
                 </button>
             </div>
         </div>
 
-        <!-- Tabla de requisitos (versión responsiva con scroll horizontal) -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+        <!-- TABLA PRINCIPAL -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
             <div class="table-container overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-900 text-white">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Norma / Ley</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Año</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Artículo(s)</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción del Requisito</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aplica</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ult. Actualización</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="norma">
+                                Norma <i class="fas fa-sort ml-1 opacity-50"></i>
+                            </th>
+                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="anio">
+                                Año <i class="fas fa-sort ml-1 opacity-50"></i>
+                            </th>
+                            <th class="px-4 py-4 text-left text-xs font-bold uppercase tracking-wider">Artículo(s)</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider">Descripción</th>
+                            <th class="px-4 py-4 text-center text-xs font-bold uppercase tracking-wider cursor-pointer select-none hover:bg-slate-800 transition-colors" data-col="aplica">
+                                Aplica <i class="fas fa-sort ml-1 opacity-50"></i>
+                            </th>
+                            <th class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaRequisitos" class="bg-white divide-y divide-gray-200">
-                        <!-- Los registros se cargarán dinámicamente con JS -->
-                        <tr><td colspan="7" class="text-center py-8 text-gray-400">Cargando información...</td></tr>
+                    <tbody id="tablaRequisitos" class="bg-white divide-y divide-slate-100">
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Modal para agregar/editar (oculto por defecto) -->
-        <div id="modalRequisito" class="fixed inset-0 bg-gray-800 bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-all duration-300">
-            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 transform transition-all max-h-[90vh] overflow-y-auto">
-                <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                    <h2 id="modalTitulo" class="text-xl font-bold text-gray-800"><i class="fas fa-balance-scale mr-2 text-indigo-500"></i>Nuevo Requisito Legal</h2>
-                    <button id="cerrarModal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
-                </div>
-                <div class="p-6">
-                    <form id="formRequisito">
-                        <input type="hidden" id="requisitoId" value="">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Norma / Ley *</label>
-                                <input type="text" id="norma" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-300" placeholder="Ej: Decreto 1072">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Año *</label>
-                                <input type="number" id="anio" required class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="2025">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Artículo(s) aplicable(s)</label>
-                                <input type="text" id="articulos" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Ej: 2.2.4.6.12">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">¿Aplica a la copropiedad? *</label>
-                                <select id="aplica" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                                    <option value="Sí">Sí</option>
-                                    <option value="No">No</option>
-                                    <option value="Parcial">Parcial</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción del requisito *</label>
-                            <textarea id="descripcion" rows="3" required class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Describir la obligación concreta..."></textarea>
-                        </div>
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de última actualización (opcional)</label>
-                            <input type="date" id="fechaActualizacion" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                        </div>
-                        <div class="mt-6 flex justify-end gap-3">
-                            <button type="button" id="cancelarModal" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Cancelar</button>
-                            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow transition font-medium">Guardar requisito</button>
-                        </div>
-                    </form>
-                </div>
+            <!-- Footer de tabla con paginación info -->
+            <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                <span id="infoTabla" class="text-xs text-slate-500"></span>
+                <span class="text-xs text-slate-400">💾 Datos guardados localmente</span>
             </div>
         </div>
     </div>
 
+    <!-- MODAL -->
+    <div id="modalRequisito" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-3xl">
+                <h2 id="modalTitulo" class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-balance-scale"></i>
+                    <span></span>
+                </h2>
+                <button id="cerrarModal" class="text-white/70 hover:text-white text-3xl leading-none transition-colors">&times;</button>
+            </div>
+            <form id="formRequisito" class="p-7 space-y-5" novalidate>
+                <input type="hidden" id="requisitoId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Norma / Ley <span class="text-red-500">*</span></label>
+                        <input type="text" id="norma" placeholder="Ej: Decreto 1072" maxlength="80"
+                               class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
+                        <span class="error-msg text-red-500 text-xs hidden mt-1">Campo obligatorio</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Año <span class="text-red-500">*</span></label>
+                        <input type="number" id="anio" placeholder="Ej: 2019" min="1900" max="2099"
+                               class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
+                        <span class="error-msg text-red-500 text-xs hidden mt-1">Año entre 1900 y 2099</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Artículo(s)</label>
+                    <input type="text" id="articulos" placeholder="Ej: Art. 2.2.4.6.12, Art. 5, Todos" maxlength="100"
+                           class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Descripción / Requisito <span class="text-red-500">*</span></label>
+                    <textarea id="descripcion" rows="4" placeholder="Describa el requisito legal aplicable..." maxlength="500"
+                              class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm resize-none transition-all"></textarea>
+                    <div class="flex justify-between mt-1">
+                        <span class="error-msg text-red-500 text-xs hidden">Campo obligatorio</span>
+                        <span id="charCount" class="text-xs text-slate-400 ml-auto">0/500</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">¿Aplica a la empresa?</label>
+                        <select id="aplica" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="Sí">✔ Sí, aplica</option>
+                            <option value="No">✖ No aplica</option>
+                            <option value="Parcial">◑ Aplica parcialmente</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Última actualización</label>
+                        <input type="date" id="fechaActualizacion" class="w-full border border-slate-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" id="cancelarModal" class="px-5 py-2.5 font-bold text-slate-500 hover:text-slate-700 text-sm transition-colors">Cancelar</button>
+                    <button type="submit" class="bg-blue-600 text-white px-7 py-2.5 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all text-sm flex items-center gap-2">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // ---------- APP: MATRIZ DE REQUISITOS LEGALES - SG-SST ----------
-        // Almacenamiento en localStorage
-        let requisitos = [];
+    // ============================================================
+    //  UTILIDADES DE ALMACENAMIENTO (con manejo de errores)
+    // ============================================================
+    const STORAGE_KEY = "matrizEntrena_v2";
 
-        // ID autoincremental
-        let nextId = 1;
+    function cargarDatos() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : datosIniciales();
+        } catch (e) {
+            console.warn("localStorage no disponible. Usando datos en memoria.", e);
+            return datosIniciales();
+        }
+    }
 
-        // Cargar datos iniciales de ejemplo (basados en matriz real)
-        const datosEjemplo = [
-            { id: 1, norma: "Ley 1562", anio: 2012, articulos: "Art. 1, 4, 11", descripcion: "Modifica el Sistema de Riesgos Laborales. Define el SG-SST y obliga a la afiliación de trabajadores a una ARL.", aplica: "Sí", fechaActualizacion: "2025-01-15" },
-            { id: 2, norma: "Decreto 1072", anio: 2015, articulos: "Art. 2.2.4.6.12", descripcion: "Obligación explícita de elaborar y mantener una matriz de requisitos legales actualizada.", aplica: "Sí", fechaActualizacion: "2025-01-15" },
-            { id: 3, norma: "Decreto 1072", anio: 2015, articulos: "Libro 2, Parte 2, Título 4", descripcion: "Reglamenta el Sistema de Gestión de la Seguridad y Salud en el Trabajo (SG-SST) para todas las empresas del país.", aplica: "Sí", fechaActualizacion: "2025-01-15" },
-            { id: 4, norma: "Decreto 1072", anio: 2015, articulos: "Art. 2.2.4.6.28", descripcion: "Regula la gestión de la seguridad y salud de los trabajadores en empresas contratistas (4 empresas prestadoras).", aplica: "Sí", fechaActualizacion: "2025-01-15" },
-            { id: 5, norma: "Resolución 0312", anio: 2019, articulos: "Artículo 1", descripcion: "Define los Estándares Mínimos del SG-SST. Su incumplimiento es sancionable.", aplica: "Sí", fechaActualizacion: "2025-02-01" },
-            { id: 6, norma: "Resolución 1409", anio: 2012, articulos: "General", descripcion: "Establece el Reglamento de Seguridad para protección contra caídas en trabajo en alturas (aplica a contratistas).", aplica: "Sí", fechaActualizacion: "2025-01-20" },
-            { id: 7, norma: "Resolución 2400", anio: 1979, articulos: "General", descripcion: "Disposiciones sobre vivienda, higiene y seguridad industrial en lugares de trabajo.", aplica: "Sí", fechaActualizacion: "2025-01-10" },
-            { id: 8, norma: "Circular 027", anio: 2026, articulos: "General", descripcion: "Registro anual de autoevaluaciones de estándares mínimos y planes de mejoramiento en plataforma SGRL.", aplica: "Sí", fechaActualizacion: "2026-02-28" },
-            { id: 9, norma: "Ley 675", anio: 2001, articulos: "Régimen Propiedad Horizontal", descripcion: "Define la responsabilidad de la administración en la seguridad y mantenimiento de áreas comunes.", aplica: "Sí", fechaActualizacion: "2025-01-05" }
+    function guardarDatos(data) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+            console.warn("No se pudo guardar en localStorage:", e);
+        }
+    }
+
+    function datosIniciales() {
+        return [
+            { id: genId(), norma: "Decreto 1072", anio: 2015, articulos: "2.2.4.6.12", descripcion: "Mantener la matriz de identificación de peligros y requisitos legales actualizada como parte del SG-SST.", aplica: "Sí", fechaActualizacion: "2024-01-15" },
+            { id: genId(), norma: "Res. 0312", anio: 2019, articulos: "Todos", descripcion: "Estándares mínimos del Sistema de Gestión de Seguridad y Salud en el Trabajo para empleadores y contratantes.", aplica: "Sí", fechaActualizacion: "2024-03-10" },
+            { id: genId(), norma: "Ley 9", anio: 1979, articulos: "Art. 84", descripcion: "Código Sanitario Nacional. Obligaciones del empleador en materia de salud ocupacional.", aplica: "Sí", fechaActualizacion: "2023-11-20" },
+            { id: genId(), norma: "Res. 2400", anio: 1979, articulos: "Art. 1-4", descripcion: "Estatuto de Seguridad Industrial. Disposiciones sobre vivienda, higiene y seguridad en los establecimientos de trabajo.", aplica: "Parcial", fechaActualizacion: "2023-09-05" },
+            { id: genId(), norma: "Decreto 1295", anio: 1994, articulos: "Art. 21", descripcion: "Sistema General de Riesgos Laborales. Obligaciones del empleador frente a la afiliación y cotización.", aplica: "Sí", fechaActualizacion: "2024-02-28" },
         ];
+    }
 
-        // Inicializar localStorage y cargar datos
-        function cargarDatosIniciales() {
-            const stored = localStorage.getItem("matrizRequisitosSST");
-            if (stored) {
-                requisitos = JSON.parse(stored);
-                // Calcular nextId basado en el máximo id existente
-                if (requisitos.length > 0) {
-                    const maxId = Math.max(...requisitos.map(r => r.id));
-                    nextId = maxId + 1;
-                } else {
-                    nextId = 1;
-                }
-            } else {
-                // Usar datos de ejemplo
-                requisitos = datosEjemplo;
-                nextId = datosEjemplo.length + 1;
-                localStorage.setItem("matrizRequisitosSST", JSON.stringify(requisitos));
-            }
-            renderizarTabla();
+    function genId() {
+        return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    // ============================================================
+    //  ESTADO DE LA APLICACIÓN
+    // ============================================================
+    let requisitos = cargarDatos();
+    let sortCol = null;
+    let sortDir = 1; // 1 = asc, -1 = desc
+
+    // ============================================================
+    //  RENDERIZADO DE LA TABLA
+    // ============================================================
+    function render() {
+        const search  = document.getElementById("searchInput").value.trim().toLowerCase();
+        const filtroA = document.getElementById("filtroAplica").value;
+
+        let filtrados = requisitos.filter(r => {
+            const matchText = !search ||
+                r.norma.toLowerCase().includes(search) ||
+                r.descripcion.toLowerCase().includes(search) ||
+                (r.articulos || "").toLowerCase().includes(search);
+            const matchAplica = !filtroA || r.aplica === filtroA;
+            return matchText && matchAplica;
+        });
+
+        // Ordenamiento
+        if (sortCol) {
+            filtrados.sort((a, b) => {
+                const va = String(a[sortCol] || "").toLowerCase();
+                const vb = String(b[sortCol] || "").toLowerCase();
+                return va < vb ? -sortDir : va > vb ? sortDir : 0;
+            });
         }
 
-        // Renderizar tabla con filtro
-        let filtroTexto = "";
-        function renderizarTabla() {
-            const tbody = document.getElementById("tablaRequisitos");
-            if (!tbody) return;
+        const tbody = document.getElementById("tablaRequisitos");
 
-            let filtrados = requisitos.filter(r => 
-                r.norma.toLowerCase().includes(filtroTexto.toLowerCase()) ||
-                r.anio.toString().includes(filtroTexto) ||
-                r.descripcion.toLowerCase().includes(filtroTexto.toLowerCase())
-            );
+        if (filtrados.length === 0) {
+            tbody.innerHTML = `
+                <tr class="empty-state">
+                    <td colspan="6" class="py-16 text-center">
+                        <div class="flex flex-col items-center gap-3 text-slate-400">
+                            <i class="fas fa-search text-4xl opacity-30"></i>
+                            <p class="font-semibold text-lg">No se encontraron requisitos</p>
+                            <p class="text-sm">Intenta con otros términos de búsqueda o ajusta los filtros</p>
+                        </div>
+                    </td>
+                </tr>`;
+        } else {
+            tbody.innerHTML = filtrados.map((r, i) => {
+                const badgeClass = r.aplica === "Sí"
+                    ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                    : r.aplica === "No"
+                    ? "bg-red-100 text-red-600 border border-red-200"
+                    : "bg-amber-100 text-amber-700 border border-amber-200";
+                const badgeIcon = r.aplica === "Sí" ? "✔" : r.aplica === "No" ? "✖" : "◑";
 
-            if (filtrados.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400"><i class="fas fa-database mr-2"></i>No hay requisitos legales registrados. Presione "Nuevo requisito" para agregar.</td></tr>`;
-                return;
-            }
+                const descCorta = r.descripcion.length > 70
+                    ? r.descripcion.slice(0, 70) + "…"
+                    : r.descripcion;
 
-            tbody.innerHTML = filtrados.map(req => `
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${escapeHtml(req.norma)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${req.anio}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs break-words">${escapeHtml(req.articulos || '—')}</td>
-                    <td class="px-6 py-4 text-sm text-gray-600 max-w-md">${escapeHtml(req.descripcion)}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${req.aplica === 'Sí' ? 'bg-green-100 text-green-800' : (req.aplica === 'Parcial' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')}">
-                            ${req.aplica}
+                const rowBg = i % 2 === 0 ? "bg-white" : "bg-slate-50/50";
+
+                return `
+                <tr class="${rowBg} hover:bg-blue-50/60 transition-colors duration-150">
+                    <td class="px-6 py-3.5">
+                        <span class="font-bold text-slate-800 text-sm">${escHtml(r.norma)}</span>
+                    </td>
+                    <td class="px-4 py-3.5 text-slate-600 text-sm font-mono">${escHtml(String(r.anio))}</td>
+                    <td class="px-4 py-3.5 text-slate-500 text-xs">${escHtml(r.articulos || "—")}</td>
+                    <td class="px-6 py-3.5 text-sm text-slate-600 tooltip-cell">
+                        <span class="block">${escHtml(descCorta)}</span>
+                        ${r.descripcion.length > 70 ? `<div class="tooltip-text">${escHtml(r.descripcion)}</div>` : ""}
+                    </td>
+                    <td class="px-4 py-3.5 text-center">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">
+                            ${badgeIcon} ${r.aplica}
                         </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${req.fechaActualizacion ? formatearFecha(req.fechaActualizacion) : 'No definida'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <button class="editar-btn text-indigo-600 hover:text-indigo-800 mx-1" data-id="${req.id}" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="eliminar-btn text-red-600 hover:text-red-800 mx-1" data-id="${req.id}" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                    <td class="px-6 py-3.5 text-center">
+                        <div class="flex items-center justify-center gap-3">
+                            <button onclick="editar('${r.id}')" title="Editar"
+                                    class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
+                                <i class="fas fa-edit text-sm"></i>
+                            </button>
+                            <button onclick="eliminar('${r.id}')" title="Eliminar"
+                                    class="text-red-400 hover:text-red-600 hover:bg-red-50 w-8 h-8 rounded-lg flex items-center justify-center transition-all">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
                     </td>
-                </tr>
-            `).join("");
-
-            // Re-asignar eventos a botones de editar/eliminar
-            document.querySelectorAll('.editar-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    editarRequisito(id);
-                });
-            });
-            document.querySelectorAll('.eliminar-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = parseInt(btn.getAttribute('data-id'));
-                    confirmarEliminar(id);
-                });
-            });
+                </tr>`;
+            }).join("");
         }
 
-        // Función auxiliar para escapar HTML
-        function escapeHtml(str) {
-            if (!str) return "";
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-                return c;
-            });
-        }
+        // Actualizar contador e info
+        document.getElementById("contadorRegistros").textContent = requisitos.length;
+        document.getElementById("infoTabla").textContent =
+            filtrados.length === requisitos.length
+                ? `Mostrando ${requisitos.length} requisito${requisitos.length !== 1 ? "s" : ""}`
+                : `Mostrando ${filtrados.length} de ${requisitos.length} requisitos`;
 
-        function formatearFecha(fechaISO) {
-            if (!fechaISO) return "";
-            const fecha = new Date(fechaISO);
-            return fecha.toLocaleDateString('es-CO');
-        }
+        guardarDatos(requisitos);
+    }
 
-        // Guardar en localStorage y re-renderizar
-        function guardarYCerrar() {
-            localStorage.setItem("matrizRequisitosSST", JSON.stringify(requisitos));
-            renderizarTabla();
-        }
+    // Escape HTML para prevenir XSS
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
 
-        // Modal
-        const modal = document.getElementById("modalRequisito");
-        const form = document.getElementById("formRequisito");
-        const modalTitulo = document.getElementById("modalTitulo");
-        const btnAgregar = document.getElementById("btnAgregar");
-        const cerrarModal = document.getElementById("cerrarModal");
-        const cancelarModal = document.getElementById("cancelarModal");
+    // ============================================================
+    //  MODAL
+    // ============================================================
+    function toggleModal(show) {
+        const m = document.getElementById("modalRequisito");
+        m.classList.toggle("hidden", !show);
+    }
 
-        function abrirModal(editar = false, datos = null) {
-            if (editar && datos) {
-                modalTitulo.innerHTML = '<i class="fas fa-edit mr-2 text-indigo-500"></i>Editar Requisito Legal';
-                document.getElementById("requisitoId").value = datos.id;
-                document.getElementById("norma").value = datos.norma;
-                document.getElementById("anio").value = datos.anio;
-                document.getElementById("articulos").value = datos.articulos || "";
-                document.getElementById("descripcion").value = datos.descripcion;
-                document.getElementById("aplica").value = datos.aplica;
-                document.getElementById("fechaActualizacion").value = datos.fechaActualizacion || "";
-            } else {
-                modalTitulo.innerHTML = '<i class="fas fa-plus-circle mr-2 text-indigo-500"></i>Nuevo Requisito Legal';
-                form.reset();
-                document.getElementById("requisitoId").value = "";
-                document.getElementById("aplica").value = "Sí";
-                document.getElementById("fechaActualizacion").value = new Date().toISOString().split('T')[0];
+    document.getElementById("btnAgregar").onclick = () => {
+        document.getElementById("formRequisito").reset();
+        document.getElementById("requisitoId").value = "";
+        document.querySelector("#modalTitulo span").textContent = "Nuevo Requisito Legal";
+        document.getElementById("fechaActualizacion").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("charCount").textContent = "0/500";
+        clearErrors();
+        toggleModal(true);
+        setTimeout(() => document.getElementById("norma").focus(), 100);
+    };
+
+    window.editar = (id) => {
+        const r = requisitos.find(x => x.id === id);
+        if (!r) return;
+        document.getElementById("requisitoId").value = r.id;
+        document.getElementById("norma").value = r.norma;
+        document.getElementById("anio").value = r.anio;
+        document.getElementById("descripcion").value = r.descripcion;
+        document.getElementById("articulos").value = r.articulos || "";
+        document.getElementById("aplica").value = r.aplica;
+        document.getElementById("fechaActualizacion").value = r.fechaActualizacion || "";
+        document.getElementById("charCount").textContent = `${r.descripcion.length}/500`;
+        document.querySelector("#modalTitulo span").textContent = "Editar Requisito";
+        clearErrors();
+        toggleModal(true);
+    };
+
+    window.eliminar = (id) => {
+        Swal.fire({
+            title: "¿Eliminar este requisito?",
+            text: "Esta acción no se puede deshacer.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            borderRadius: "16px"
+        }).then(result => {
+            if (result.isConfirmed) {
+                requisitos = requisitos.filter(x => x.id !== id);
+                render();
+                Swal.fire({ title: "Eliminado", icon: "success", timer: 1200, showConfirmButton: false });
             }
-            modal.classList.remove("hidden");
-        }
-
-        function cerrarModalFunc() {
-            modal.classList.add("hidden");
-        }
-
-        btnAgregar.addEventListener("click", () => abrirModal(false));
-        cerrarModal.addEventListener("click", cerrarModalFunc);
-        cancelarModal.addEventListener("click", cerrarModalFunc);
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const id = document.getElementById("requisitoId").value;
-            const norma = document.getElementById("norma").value.trim();
-            const anio = parseInt(document.getElementById("anio").value);
-            const articulos = document.getElementById("articulos").value.trim();
-            const descripcion = document.getElementById("descripcion").value.trim();
-            const aplica = document.getElementById("aplica").value;
-            let fechaActualizacion = document.getElementById("fechaActualizacion").value;
-
-            if (!norma || !anio || !descripcion) {
-                Swal.fire("Campos incompletos", "Norma, año y descripción son obligatorios.", "warning");
-                return;
-            }
-
-            if (id === "") {
-                // Nuevo
-                const nuevo = {
-                    id: nextId++,
-                    norma,
-                    anio,
-                    articulos: articulos || "",
-                    descripcion,
-                    aplica,
-                    fechaActualizacion: fechaActualizacion || new Date().toISOString().split('T')[0]
-                };
-                requisitos.push(nuevo);
-                Swal.fire("Agregado", "Requisito legal añadido correctamente.", "success");
-            } else {
-                // Editar
-                const index = requisitos.findIndex(r => r.id == id);
-                if (index !== -1) {
-                    requisitos[index] = {
-                        ...requisitos[index],
-                        norma, anio, articulos, descripcion, aplica,
-                        fechaActualizacion: fechaActualizacion || requisitos[index].fechaActualizacion
-                    };
-                    Swal.fire("Actualizado", "Requisito modificado exitosamente.", "success");
-                }
-            }
-            guardarYCerrar();
-            cerrarModalFunc();
         });
+    };
 
-        function editarRequisito(id) {
-            const req = requisitos.find(r => r.id === id);
-            if (req) {
-                abrirModal(true, req);
-            }
+    // Cerrar modal con Escape o clic fuera
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") toggleModal(false);
+    });
+    document.getElementById("modalRequisito").addEventListener("click", e => {
+        if (e.target === e.currentTarget) toggleModal(false);
+    });
+    document.getElementById("cerrarModal").onclick = () => toggleModal(false);
+    document.getElementById("cancelarModal").onclick = () => toggleModal(false);
+
+    // Contador de caracteres en descripción
+    document.getElementById("descripcion").addEventListener("input", function() {
+        document.getElementById("charCount").textContent = `${this.value.length}/500`;
+    });
+
+    // ============================================================
+    //  VALIDACIÓN DE FORMULARIO
+    // ============================================================
+    function clearErrors() {
+        document.querySelectorAll(".error-msg").forEach(e => e.classList.add("hidden"));
+        document.querySelectorAll("input, textarea").forEach(e => e.classList.remove("border-red-400"));
+    }
+
+    function validateForm() {
+        clearErrors();
+        let valid = true;
+        const norma = document.getElementById("norma");
+        const anio  = document.getElementById("anio");
+        const desc  = document.getElementById("descripcion");
+
+        if (!norma.value.trim()) {
+            norma.classList.add("border-red-400");
+            norma.nextElementSibling.classList.remove("hidden");
+            valid = false;
+        }
+        const anioVal = parseInt(anio.value);
+        if (!anio.value || isNaN(anioVal) || anioVal < 1900 || anioVal > 2099) {
+            anio.classList.add("border-red-400");
+            anio.nextElementSibling.classList.remove("hidden");
+            valid = false;
+        }
+        if (!desc.value.trim()) {
+            desc.classList.add("border-red-400");
+            desc.parentElement.querySelector(".error-msg").classList.remove("hidden");
+            valid = false;
+        }
+        return valid;
+    }
+
+    document.getElementById("formRequisito").onsubmit = (e) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        const id = document.getElementById("requisitoId").value;
+        const data = {
+            id: id || genId(),
+            norma: document.getElementById("norma").value.trim(),
+            anio: parseInt(document.getElementById("anio").value),
+            descripcion: document.getElementById("descripcion").value.trim(),
+            articulos: document.getElementById("articulos").value.trim(),
+            aplica: document.getElementById("aplica").value,
+            fechaActualizacion: document.getElementById("fechaActualizacion").value
+        };
+
+        if (id) {
+            const idx = requisitos.findIndex(x => x.id === id);
+            if (idx !== -1) requisitos[idx] = data;
+        } else {
+            requisitos.push(data);
         }
 
-        function confirmarEliminar(id) {
-            Swal.fire({
-                title: '¿Eliminar requisito?',
-                text: "Esta acción no se puede deshacer",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    requisitos = requisitos.filter(r => r.id !== id);
-                    guardarYCerrar();
-                    Swal.fire('Eliminado', 'El requisito ha sido removido de la matriz.', 'success');
-                }
-            });
-        }
-
-        // Filtro búsqueda
-        const searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("input", (e) => {
-            filtroTexto = e.target.value;
-            renderizarTabla();
+        toggleModal(false);
+        render();
+        Swal.fire({
+            title: id ? "Actualizado correctamente" : "Requisito agregado",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false
         });
+    };
 
-        document.getElementById("btnLimpiarFiltro").addEventListener("click", () => {
-            searchInput.value = "";
-            filtroTexto = "";
-            renderizarTabla();
-        });
+    // ============================================================
+    //  EXPORTACIÓN EXCEL / CSV (UTF-8 BOM para tildes en Excel)
+    // ============================================================
+    document.getElementById("btnExportarCSV").onclick = () => {
+        const headers = ["Norma", "Año", "Artículo(s)", "Descripción", "Aplica", "Última Actualización"];
+        // BOM UTF-8 + sep=; para que Excel abra con columnas correctas en español
+        const BOM = "\uFEFF";
+        let csv = BOM + "sep=;\n" + headers.join(";") + "\n";
 
-        // Exportar a CSV
-        document.getElementById("btnExportarCSV").addEventListener("click", () => {
-            if (requisitos.length === 0) {
-                Swal.fire("Sin datos", "No hay requisitos para exportar.", "info");
-                return;
-            }
-            // Encabezados
-            const headers = ["Norma / Ley", "Año", "Artículo(s)", "Descripción del Requisito", "Aplica", "Última actualización"];
-            const rows = requisitos.map(r => [
-                `"${r.norma.replace(/"/g, '""')}"`,
+        requisitos.forEach(r => {
+            const cols = [
+                r.norma,
                 r.anio,
-                `"${(r.articulos || "").replace(/"/g, '""')}"`,
-                `"${r.descripcion.replace(/"/g, '""')}"`,
+                r.articulos || "",
+                r.descripcion,
                 r.aplica,
                 r.fechaActualizacion || ""
-            ]);
-            const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");
-            const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            link.href = url;
-            link.setAttribute("download", `matriz_sgsst_${new Date().toISOString().slice(0,19)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            Swal.fire("Exportado", "Matriz exportada a CSV correctamente.", "success");
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`);
+            csv += cols.join(";") + "\n";
         });
 
-        // Iniciar la aplicación
-        cargarDatosIniciales();
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Matriz_Legal_SST_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // ============================================================
+    //  ORDENAMIENTO POR COLUMNA
+    // ============================================================
+    document.querySelectorAll("th[data-col]").forEach(th => {
+        th.addEventListener("click", () => {
+            const col = th.dataset.col;
+            if (sortCol === col) {
+                sortDir *= -1;
+            } else {
+                sortCol = col;
+                sortDir = 1;
+            }
+            // Actualizar iconos
+            document.querySelectorAll("th[data-col] i").forEach(i => {
+                i.className = "fas fa-sort ml-1 opacity-50";
+            });
+            th.querySelector("i").className = `fas fa-sort-${sortDir === 1 ? "up" : "down"} ml-1 text-blue-300`;
+            render();
+        });
+    });
+
+    // ============================================================
+    //  LISTENERS DE BÚSQUEDA Y FILTRO
+    // ============================================================
+    document.getElementById("searchInput").addEventListener("input", render);
+    document.getElementById("filtroAplica").addEventListener("change", render);
+
+    // ============================================================
+    //  INICIALIZACIÓN
+    // ============================================================
+    render();
     </script>
 </body>
 </html>
