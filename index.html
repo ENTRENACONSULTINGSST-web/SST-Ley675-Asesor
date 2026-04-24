@@ -4,17 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consola SST - Entrena Consulting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 8px solid #2980b9; }
-        h1 { color: #2c3e50; text-align: center; }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 10px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .tool-box { border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fafafa; }
-        button { width: 100%; background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        .tool-box { border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #fafafa; display: flex; flex-direction: column; }
+        .full-width { grid-column: span 2; border-top: 2px solid #2c3e50; margin-top: 10px; }
+        button { width: 100%; background-color: #2980b9; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 10px; transition: 0.3s; }
         button.sst { background-color: #e67e22; }
-        button:hover { opacity: 0.9; }
-        textarea { width: 100%; height: 100px; font-size: 11px; font-family: monospace; }
+        button:hover { opacity: 0.8; transform: translateY(-1px); }
+        textarea { width: 100%; height: 100px; font-size: 11px; font-family: monospace; resize: none; border: 1px solid #ccc; border-radius: 4px; padding: 5px; }
+        .btn-link { display: block; text-align: center; background: #2c3e50; color: white; padding: 12px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn-link:hover { background: #1a252f; }
         footer { margin-top: 30px; text-align: center; font-size: 12px; color: #7f8c8d; }
+        h3 { margin-top: 0; color: #34495e; }
     </style>
 </head>
 <body>
@@ -26,7 +31,9 @@
     <div class="grid">
         <div class="tool-box">
             <h3>Propiedad Horizontal</h3>
-            <button onclick="copyText('prompt675')">Copiar Experto Ley 675</button>
+            <button onclick="copyText('prompt675')">
+                <i class="fas fa-copy"></i> Copiar Experto Ley 675
+            </button>
             <textarea id="prompt675" readonly>
 /* BLOQUE LEY 675 */
 Actúa como experto en Propiedad Horizontal Colombia. Base: Ley 675/2001. Prioriza áreas comunes y responsabilidad del administrador. Responde con rigor legal.
@@ -35,32 +42,15 @@ Actúa como experto en Propiedad Horizontal Colombia. Base: Ley 675/2001. Priori
 
         <div class="tool-box">
             <h3>SG-SST (Decreto 1072)</h3>
-            <button class="sst" onclick="copyText('prompt1072')">Copiar Experto SG-SST</button>
+            <button class="sst" onclick="copyText('prompt1072')">
+                <i class="fas fa-copy"></i> Copiar Experto SG-SST
+            </button>
             <textarea id="prompt1072" readonly>
 /* BLOQUE DECRETO 1072 */
-Actúa como Especialista en SG-SST. Base: Decreto 1072 de 2015. Enfócate en estándares mínimos, ciclo PHVA y prevención de riesgos laborales en Colombia.
+Actúa como Especialista en SG-SST. Base: Decreto 1072 de 2015. Enfócate en estándares mínimos (Res. 0312), ciclo PHVA y prevención de riesgos laborales en Colombia.
 /* FIN */</textarea>
         </div>
-    </div>
-</div>
 
-<footer>Entrena Consulting SAS - Especialistas en SST</footer>
-
-<script>
-    function copyText(id) {
-        var copyText = document.getElementById(id);
-        copyText.select();
-        document.execCommand("copy");
-        alert("¡Código de experto copiado! Pégalo en Claude o ChatGPT.");
-    }
-</script>
-
-</body>
-</html>
-<div class="tool-box" style="grid-column: span 2;">
-    <h3>Aplicación: Gestor de Matriz Legal (1072)</h3>
-    <p class="text-sm">Herramienta autónoma para editar, filtrar y exportar requisitos en CSV.</p>
-    <a href="matriz-1072.html" style="display: block; text-align: center; background: #2c3e50; color: white; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold;">
-        <i class="fas fa-external-link-alt"></i> Abrir Aplicación de Matriz
-    </a>
-</div>
+        <div class="tool-box full-width">
+            <h3><i class="fas fa-table"></i> Aplicación: Gestor de Matriz Legal (1072)</h3>
+            <p style="font-size: 0.9em; color
