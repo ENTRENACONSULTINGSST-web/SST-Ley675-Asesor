@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Investigación SST PRO Certificable</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</head>
+
+<body class="bg-gray-100 p-6">
+
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-xl shadow">
+
+<h1 class="text-2xl font-bold mb-4">Investigación de Accidentes SG-SST</h1>
+
+<!-- ================= CONSECUTIVO ================= -->
+<div class="mb-4">
+<label class="font-semibold">Consecutivo:</label>
+<input id="consecutivo" class="border p-2 w-full" readonly>
+</div>
+
+<!-- ================= DATOS ================= -->
+<input id="fecha" type="date" class="border p-2 w-full mb-2">
+<input id="lugar" placeholder="Lugar" class="border p-2 w-full mb-2">
+<textarea id="descripcion" placeholder="Descripción del accidente" class="border p-2 w-full mb-3"></textarea>
+
+<!-- ================= CAUSAS ================= -->
+<h2 class="font-bold mt-4">Causas</h2>
+<textarea id="actos" placeholder="Actos inseguros" class="border p-2 w-full mb-2"></textarea>
+<textarea id="condiciones" placeholder="Condiciones inseguras" class="border p-2 w-full mb-2"></textarea>
+
+<!-- ================= 5 PORQUES ================= -->
+<h2 class="font-bold mt-4">5 Porqués</h2>
+<div id="porques"></div>
+
+<!-- ================= PLAN ACCION ================= -->
+<h2 class="font-bold mt-4">Plan de Acción</h2>
+<div id="acciones"></div>
+<button onclick="addAccion()" class="bg-blue-600 text-white px-3 py-1 mt-2">+ Acción</button>
+
+<!-- ================= FIRMA ================= -->
+<h2 class="font-bold mt-4">Firma Investigador</h2>
+<canvas id="firma" width="400" height="150" class="border"></canvas>
+<br>
+<button onclick="limpiarFirma()" class="bg-gray-500 text-white px-2 py-1 mt-1">Limpiar</button>
+
+<!-- ================= BOTONES ================= -->
+<div class="mt-6 flex gap-3">
+<button onclick="generarPDF()" class="bg-green-600 text-white px-4 py-2">Generar PDF</button>
+</div>
+
+<!-- ================= INFORME ================= -->
+<div id="reporte" class="mt-6 bg-white p-4 border"></div>
+
+</div>
+
+<script>
+
+// ================= CONSECUTIVO =================
+let cons = localStorage.getItem("consecutivo") || 1;
+document.getElementById("consecutivo").value = "INV-" + cons;
+
+// ================= 5 PORQUES =================
+for(let i=1;i<=5;i++){
+document.getElementById("porques").innerHTML += 
+`<input id="p${i}" placeholder="${i}° porqué" class="border p-2 w-full mt-1">`;
+}
+
+// ================= PLAN ACCION =================
+let acciones = [];
+
+function addAccion(){
+acciones.push({desc:"",resp:"",fecha:"",estado:"Pendiente"});
+renderAcciones();
+}
+
+function renderAcciones(){
+let html="";
+acciones.forEach((a,i)=>{
+html+=`
+<div class="grid grid-cols-4 gap-2 mt-2">
+<input placeholder="Acción" onchange="acciones[${i}].desc=this.value" class="border p-1">
+<input placeholder="Responsable" onchange="acciones[${i}].resp=this.value" class="border p-1">
+<input type="date" onchange="acciones[${i}].fecha=this.value" class="border p-1">
+<select onchange="acciones[${i}].estado=this.value">
+<option>Pendiente</option><option>En proceso</option><option>Cerrado</option>
+</select>
+</div>`;
+});
+document.getElementById("acciones").innerHTML=html;
+}
+
+// ================= FIRMA =================
+let canvas = document.getElementById("firma");
+let ctx = canvas.getContext("2d");
+let dibujando=false;
+
+canvas.onmousedown=()=>dibujando=true;
+canvas.onmouseup=()=>dibujando=false;
+canvas.onmousemove=e=>{
+if(!dibujando)return;
+ctx.lineTo(e.offsetX,e.offsetY);
+ctx.stroke();
+};
+
+function limpiarFirma(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+// ================= VALIDACION =================
+function validar(){
+for(let i=1;i<=5;i++){
+if(document.getElementById("p"+i).value.length<5){
+Swal.fire("Error","Completa los 5 porqués correctamente","warning");
+return false;
+}
+}
+return true;
+}
+
+// ================= GENERAR PDF =================
+function generarPDF(){
+
+if(!validar()) return;
+
+let reporteHTML = `
+<h2>Informe Investigación Accidente</h2>
+<p><b>Consecutivo:</b> ${consecutivo.value}</p>
+<p><b>Fecha:</b> ${fecha.value}</p>
+<p><b>Lugar:</b> ${lugar.value}</p>
+<p><b>Descripción:</b> ${descripcion.value}</p>
+
+<h3>Causas</h3>
+<p>Actos: ${actos.value}</p>
+<p>Condiciones: ${condiciones.value}</p>
+
+<h3>5 Porqués</h3>
+${[1,2,3,4,5].map(i=>`<p>${i}: ${document.getElementById("p"+i).value}</p>`).join("")}
+
+<h3>Plan de Acción</h3>
+${acciones.map(a=>`<p>${a.desc} - ${a.resp} - ${a.fecha} - ${a.estado}</p>`).join("")}
+
+<p><b>Conclusión:</b> Evento asociado a fallas del SG-SST.</p>
+
+<img src="${canvas.toDataURL()}" width="200">
+
+<p style="font-size:10px;">
+Documento conforme a Decreto 1072 de 2015 y Resolución 0312 de 2019.
+</p>
+`;
+
+document.getElementById("reporte").innerHTML = reporteHTML;
+
+// PDF
+html2pdf().from(document.getElementById("reporte")).save("Informe_SST.pdf");
+
+// aumentar consecutivo
+cons++;
+localStorage.setItem("consecutivo", cons);
+
+Swal.fire("PDF generado","Documento listo","success");
+}
+
+</script>
+
+</body>
+</html>
