@@ -24,7 +24,6 @@
 <body class="bg-gray-100 font-sans p-4 md:p-6">
 
 <div class="max-w-7xl mx-auto">
-    <!-- Cabecera normativa -->
     <div class="text-center mb-6">
         <div class="inline-flex items-center gap-3 bg-white shadow-md rounded-full px-6 py-2">
             <i class="fas fa-clipboard-list text-blue-700"></i>
@@ -34,10 +33,8 @@
         <p class="text-sm text-gray-600 mt-2">
             Base legal: Resolución 1401 de 2007, Decreto 1072 de 2015 (Art. 2.2.4.6.16), Resolución 0312 de 2019, NTC 3701, metodología 5W2H.
         </p>
-        <p class="text-xs text-gray-500">Equipo investigador según Res 1401 | Clasificación de causas NTC 3701 | Análisis integral de costos y 5W2H.</p>
     </div>
 
-    <!-- Indicador de pasos -->
     <div class="flex flex-wrap justify-center gap-2 mb-8">
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="1">1. Datos y 5W2H</div>
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="2">2. Causas NTC 3701</div>
@@ -47,377 +44,207 @@
         <div class="step px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-medium cursor-pointer" data-step="6">6. Informe final</div>
     </div>
 
-    <!-- Contenedor de pasos -->
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-        
-        <!-- PASO 1: DATOS DEL SUCESO + 5W2H ampliado con HOW MUCH-->
         <div id="step1" class="step-content p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-info-circle text-blue-600 mr-2"></i>Paso 1: Información general del evento (5W2H)</h2>
-            <div class="grid md:grid-cols-2 gap-5">
-                <div><label class="font-semibold">Consecutivo *</label><input type="text" id="consecutivo" class="w-full border rounded p-2" value="INV-2026-001"></div>
-                <div><label class="font-semibold">Fecha del accidente *</label><input type="date" id="fechaAcc" class="w-full border rounded p-2"></div>
-                <div><label class="font-semibold">Hora *</label><input type="time" id="horaAcc" class="w-full border rounded p-2"></div>
-                <div><label class="font-semibold">Lugar exacto (Where)</label><input type="text" id="lugar" class="w-full border rounded p-2" placeholder="Ej. cuarto de bombas"></div>
-                <div><label class="font-semibold">Trabajador afectado (Who)</label><input type="text" id="trabajador" class="w-full border rounded p-2"></div>
-                <div><label class="font-semibold">Empresa empleadora o contratista</label><input type="text" id="empresa" class="w-full border rounded p-2"></div>
-                <div><label class="font-semibold">Tipo de suceso</label>
-                    <select id="tipoSuceso" class="w-full border rounded p-2">
-                        <option>Accidente de trabajo con incapacidad</option><option>Accidente de trabajo sin incapacidad</option>
-                        <option>Accidente leve (primeros auxilios)</option><option>Incidente peligroso (sin lesiones)</option>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-info-circle text-blue-600 mr-2"></i>Paso 1: Información general y Datos del Trabajador</h2>
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="md:col-span-3 bg-blue-50 p-3 rounded-lg font-bold text-blue-800">Datos de la Empresa / Centro de Trabajo</div>
+                <div><label class="font-semibold text-sm">NIT *</label><input type="text" id="nitEmpresa" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Nombre Empresa *</label><input type="text" id="empresa" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">ARL *</label><input type="text" id="arlEmpresa" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Municipio/Dpto *</label><input type="text" id="ubicacionEmpresa" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Centro de Trabajo *</label><input type="text" id="centroTrabajo" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Actividad Económica</label><input type="text" id="actividadEco" class="w-full border rounded p-2 text-sm"></div>
+
+                <div class="md:col-span-3 bg-green-50 p-3 rounded-lg font-bold text-green-800">Datos del Trabajador Accidentado</div>
+                <div><label class="font-semibold text-sm">Nombre completo *</label><input type="text" id="trabajador" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Cédula *</label><input type="text" id="cedulaTrabajador" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Cargo *</label><input type="text" id="cargoTrabajador" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Fecha Ingreso</label><input type="date" id="fechaIngreso" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Salario Mensual</label><input type="number" id="salarioTrabajador" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Vinculación</label>
+                    <select id="vinculacion" class="w-full border rounded p-2 text-sm">
+                        <option>Directo</option><option>Contratista</option><option>Misión</option><option>Cooperado</option>
                     </select>
                 </div>
-                <div><label class="font-semibold">What: ¿Qué sucedió exactamente?</label><input type="text" id="whatHappened" class="w-full border rounded p-2" placeholder="Descripción concreta del evento"></div>
-                <div class="md:col-span-2"><label class="font-semibold">Descripción detallada del accidente (How) *</label><textarea id="descripcionAcc" rows="3" class="w-full border rounded p-2" placeholder="¿Cómo ocurrió? ¿Secuencia de eventos?"></textarea></div>
-                <div><label class="font-semibold">Why: ¿Por qué ocurrió? (hipótesis inicial)</label><input type="text" id="whyHypothesis" class="w-full border rounded p-2" placeholder="Posibles causas aparentes"></div>
-                <div><label class="font-semibold">When: ¿Cuándo se detectó el incidente?</label><input type="text" id="whenDetected" class="w-full border rounded p-2" placeholder="Ej. Inmediatamente después, durante la ronda de inspección"></div>
-                <div><label class="font-semibold">Consecuencias (lesiones, días de incapacidad, daños)</label><input type="text" id="consecuencias" class="w-full border rounded p-2"></div>
+
+                <div class="md:col-span-3 bg-red-50 p-3 rounded-lg font-bold text-red-800">Detalles del Suceso (5W2H)</div>
+                <div><label class="font-semibold text-sm">Consecutivo *</label><input type="text" id="consecutivo" class="w-full border rounded p-2 text-sm" value="INV-2026-001"></div>
+                <div><label class="font-semibold text-sm">Fecha Accidente *</label><input type="date" id="fechaAcc" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Hora (HH:MM) *</label><input type="time" id="horaAcc" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Día de la semana</label><input type="text" id="diaSemana" class="w-full border rounded p-2 text-sm" placeholder="Ej: Martes"></div>
+                <div><label class="font-semibold text-sm">Jornada</label>
+                    <select id="jornada" class="w-full border rounded p-2 text-sm">
+                        <option>Normal</option><option>Extra</option>
+                    </select>
+                </div>
+                <div><label class="font-semibold text-sm">Sitio (Dentro/Fuera)</label>
+                    <select id="sitioLugar" class="w-full border rounded p-2 text-sm">
+                        <option>Dentro de la empresa</option><option>Fuera de la empresa</option>
+                    </select>
+                </div>
+                <div><label class="font-semibold text-sm">Lugar específico (Where)</label><input type="text" id="lugar" class="w-full border rounded p-2 text-sm" placeholder="Ej. Almacén"></div>
+                <div><label class="font-semibold text-sm">Agente (¿Con qué?) *</label><input type="text" id="agenteAcc" class="w-full border rounded p-2 text-sm" placeholder="Ej: Herramienta manual"></div>
+                <div><label class="font-semibold text-sm">Parte del Cuerpo</label><input type="text" id="parteCuerpo" class="w-full border rounded p-2 text-sm" placeholder="Ej: Mano derecha"></div>
+
+                <div class="md:col-span-3"><label class="font-semibold text-sm">Descripción del evento (How) *</label><textarea id="descripcionAcc" rows="3" class="w-full border rounded p-2 text-sm" placeholder="Narración detallada..."></textarea></div>
+                <div class="md:col-span-2"><label class="font-semibold text-sm">Testigos (Nombres e Identificación)</label><input type="text" id="testigos" class="w-full border rounded p-2 text-sm"></div>
+                <div><label class="font-semibold text-sm">Consecuencias/Lesión</label><input type="text" id="consecuencias" class="w-full border rounded p-2 text-sm"></div>
             </div>
             <div class="mt-6 flex justify-end"><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente <i class="fas fa-arrow-right"></i></button></div>
         </div>
 
-        <!-- PASO 2: CAUSAS INMEDIATAS Y BÁSICAS SEGÚN NTC 3701 (listados interactivos) -->
         <div id="step2" class="step-content hidden p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-bolt text-yellow-600 mr-2"></i>Paso 2: Clasificación de causas según NTC 3701</h2>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-bolt text-yellow-600 mr-2"></i>Paso 2: Clasificación de causas (Actos y Condiciones)</h2>
             <div class="grid md:grid-cols-2 gap-6">
-                <!-- Causas inmediatas (actos subestándar) -->
                 <div>
-                    <h3 class="font-bold text-gray-800">⚡ Causas inmediatas - Actos subestándar (NTC 3701)</h3>
-                    <p class="text-xs text-gray-500 mb-2">Seleccione los actos inseguros presentes:</p>
+                    <h3 class="font-bold text-gray-800">⚡ Actos subestándar (NTC 3701)</h3>
                     <ul id="actosList" class="ntc-list max-h-48 overflow-y-auto border rounded-lg p-2 bg-gray-50">
                         <li data-value="Operar equipos sin autorización">Operar equipos sin autorización</li>
                         <li data-value="No usar EPP adecuado">No usar EPP adecuado</li>
+                        <li data-value="Mantenimiento sin bloqueo (LOTO)">Mantenimiento sin bloqueo (LOTO)</li>
+                        <li data-value="No seguir procedimiento">No seguir procedimiento</li>
                         <li data-value="Adoptar postura insegura">Adoptar postura insegura</li>
-                        <li data-value="Realizar mantenimiento sin bloqueo de energía (LOTO)">Realizar mantenimiento sin bloqueo de energía (LOTO)</li>
-                        <li data-value="Velocidad inadecuada en vehículos/maquinaria">Velocidad inadecuada en vehículos/maquinaria</li>
-                        <li data-value="Distracción o mal uso de equipos">Distracción o mal uso de equipos</li>
-                        <li data-value="No seguir procedimiento establecido">No seguir procedimiento establecido</li>
-                        <li data-value="Otro">Otro (especificar)</li>
                     </ul>
-                    <input type="text" id="actoOtro" class="w-full border rounded p-1 mt-2 text-sm" placeholder="Especifique otro acto si seleccionó 'Otro'">
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-800">⚡ Causas inmediatas - Condiciones subestándar (NTC 3701)</h3>
-                    <p class="text-xs text-gray-500 mb-2">Seleccione las condiciones inseguras:</p>
+                    <h3 class="font-bold text-gray-800">⚡ Condiciones subestándar</h3>
                     <ul id="condicionesList" class="ntc-list max-h-48 overflow-y-auto border rounded-lg p-2 bg-gray-50">
-                        <li data-value="Protecciones o resguardos inadecuados">Protecciones o resguardos inadecuados</li>
-                        <li data-value="Herramientas o equipos defectuosos">Herramientas o equipos defectuosos</li>
-                        <li data-value="Iluminación deficiente">Iluminación deficiente</li>
-                        <li data-value="Orden y aseo inadecuados">Orden y aseo inadecuados</li>
-                        <li data-value="Señalización de seguridad ausente o deteriorada">Señalización de seguridad ausente o deteriorada</li>
-                        <li data-value="Pisos resbaladizos o áreas con obstáculos">Pisos resbaladizos o áreas con obstáculos</li>
-                        <li data-value="Ventilación o temperatura extrema">Ventilación o temperatura extrema</li>
-                        <li data-value="Otro">Otro (especificar)</li>
-                    </ul>
-                    <input type="text" id="condicionOtro" class="w-full border rounded p-1 mt-2 text-sm" placeholder="Especifique otra condición">
-                </div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6 mt-6">
-                <!-- Causas básicas factores personales -->
-                <div>
-                    <h3 class="font-bold text-gray-800">🌿 Causas básicas - Factores personales (NTC 3701)</h3>
-                    <ul id="factoresPersonalesList" class="ntc-list max-h-36 overflow-y-auto border rounded-lg p-2 bg-gray-50">
-                        <li data-value="Falta de conocimiento o destreza">Falta de conocimiento o destreza</li>
-                        <li data-value="Motivación inadecuada / mala actitud">Motivación inadecuada / mala actitud</li>
-                        <li data-value="Problemas físicos o fisiológicos">Problemas físicos o fisiológicos</li>
-                        <li data-value="Fatiga, estrés o condición de salud">Fatiga, estrés o condición de salud</li>
-                        <li data-value="Capacitación insuficiente en SST">Capacitación insuficiente en SST</li>
+                        <li data-value="Protecciones inadecuadas">Protecciones inadecuadas</li>
+                        <li data-value="Herramientas defectuosas">Herramientas defectuosas</li>
+                        <li data-value="Orden y aseo deficiente">Orden y aseo deficiente</li>
+                        <li data-value="Iluminación inadecuada">Iluminación inadecuada</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-bold text-gray-800">🌿 Causas básicas - Factores de gestión (NTC 3701)</h3>
-                    <ul id="factoresGestionList" class="ntc-list max-h-36 overflow-y-auto border rounded-lg p-2 bg-gray-50">
-                        <li data-value="Supervisión ineficaz o inexistente">Supervisión ineficaz o inexistente</li>
-                        <li data-value="Estándares de trabajo inadecuados">Estándares de trabajo inadecuados</li>
-                        <li data-value="Falta de procedimiento de trabajo seguro">Falta de procedimiento de trabajo seguro</li>
-                        <li data-value="Asignación inadecuada de recursos para SST">Asignación inadecuada de recursos para SST</li>
-                        <li data-value="Gestión de contratistas débil (no se exige documentación)">Gestión de contratistas débil</li>
+                    <h3 class="font-bold text-gray-800">🌿 Factores personales</h3>
+                    <ul id="factoresPersonalesList" class="ntc-list max-h-48 overflow-y-auto border rounded-lg p-2 bg-gray-50">
+                        <li data-value="Falta de conocimiento">Falta de conocimiento</li>
+                        <li data-value="Motivación deficiente">Motivación deficiente</li>
+                        <li data-value="Fatiga o estrés">Fatiga o estrés</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800">🌿 Factores de gestión</h3>
+                    <ul id="factoresGestionList" class="ntc-list max-h-48 overflow-y-auto border rounded-lg p-2 bg-gray-50">
+                        <li data-value="Supervisión inexistente">Supervisión inexistente</li>
+                        <li data-value="Falta de estándares">Falta de estándares</li>
+                        <li data-value="Gestión de contratistas débil">Gestión de contratistas débil</li>
                     </ul>
                 </div>
             </div>
-            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-arrow-left"></i> Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
+            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
         </div>
 
-        <!-- PASO 3: ANÁLISIS CAUSA RAÍZ (5 Porqués + Ishikawa) -->
         <div id="step3" class="step-content hidden p-6 md:p-8">
             <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-fish text-emerald-600 mr-2"></i>Paso 3: Análisis de causa raíz</h2>
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
                     <label class="font-bold block mb-1">Técnica de los 5 Porqués</label>
                     <div id="porquesContainer" class="space-y-2"></div>
-                    <button id="btnGenerarRaizPorques" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg text-sm"><i class="fas fa-sync-alt"></i> Generar causa raíz desde 5 Porqués</button>
+                    <button id="btnGenerarRaizPorques" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Generar raíz</button>
                     <div id="raizResultado" class="mt-4 p-3 bg-green-50 border rounded hidden font-semibold"></div>
                 </div>
                 <div>
-                    <label class="font-bold block mb-1">Diagrama de Ishikawa / Espina de Pescado</label>
-                    <div id="fishboneContainer" class="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto"></div>
+                    <label class="font-bold block mb-1">Causa Raíz Final (Conclusión)</label>
+                    <textarea id="causaRaizDefinitiva" rows="4" class="w-full border rounded p-2" placeholder="Escriba la conclusión final..."></textarea>
                 </div>
             </div>
             <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
         </div>
 
-        <!-- PASO 4: EQUIPO INVESTIGADOR (Res 1401) + COSTOS (HOW MUCH) -->
         <div id="step4" class="step-content hidden p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-users text-indigo-600 mr-2"></i>Paso 4: Equipo investigador y análisis de costos (5W2H - How Much)</h2>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-users text-indigo-600 mr-2"></i>Paso 4: Equipo Investigador y Costos</h2>
             <div class="grid md:grid-cols-2 gap-8">
                 <div>
-                    <label class="font-bold block">Equipo que realizó la investigación (Resolución 1401 de 2007)</label>
+                    <label class="font-bold block">Equipo (Mínimo Res 1401)</label>
                     <ul id="equipoList" class="ntc-list mt-2 border rounded-lg p-3">
-                        <li><label><input type="checkbox" value="Representante empleador (Administrador)"> Representante empleador (Administrador)</label></li>
-                        <li><label><input type="checkbox" value="Representante de los trabajadores (COPASST o delegado)"> Representante de los trabajadores (COPASST o delegado)</label></li>
-                        <li><label><input type="checkbox" value="Profesional en SST o responsable del SG-SST"> Profesional en SST o responsable del SG-SST</label></li>
-                        <li><label><input type="checkbox" value="Testigos directos del accidente"> Testigos directos del accidente</label></li>
-                        <li><label><input type="checkbox" value="Supervisor inmediato"> Supervisor inmediato</label></li>
-                        <li><label><input type="checkbox" value="Gerente o administrador de la copropiedad"> Gerente o administrador de la copropiedad</label></li>
-                        <li><label><input type="checkbox" value="ARL (si el accidente fue grave o mortal)"> ARL (si el accidente fue grave o mortal)</label></li>
-                        <li><label><input type="checkbox" value="Otro"> Otro</label> <input type="text" id="otroEquipo" class="border rounded p-1 text-sm w-full mt-1" placeholder="¿Quién más participó?"></li>
+                        <li><label><input type="checkbox" value="Jefe Inmediato"> Jefe Inmediato / Supervisor</label></li>
+                        <li><label><input type="checkbox" value="COPASST"> Representante COPASST / Vigía</label></li>
+                        <li><label><input type="checkbox" value="Encargado SST"> Responsable SG-SST</label></li>
+                        <li><label><input type="checkbox" value="Licenciado SST"> Licenciado SST (Para graves/mortales)</label></li>
                     </ul>
-                    <p class="text-xs text-gray-500 mt-2 mb-3">Según Resolución 1401 de 2007, en accidentes graves o mortales debe participar un profesional con licencia en salud ocupacional (SST).</p>
                 </div>
                 <div>
-                    <label class="font-bold block text-red-700">💰 Análisis de costos del accidente (How Much)</label>
+                    <label class="font-bold block text-red-700">💰 Costos (How Much)</label>
                     <div class="costs-grid mt-2">
-                        <div><label class="text-sm">Días de incapacidad:</label><input type="number" id="costoDias" class="w-full border rounded p-1" value="0"></div>
-                        <div><label class="text-sm">Valor día de trabajo (COP):</label><input type="number" id="costoDiaValor" class="w-full border rounded p-1" value="50000"></div>
-                        <div><label class="text-sm">Gastos médicos directos:</label><input type="number" id="costoMedico" class="w-full border rounded p-1" value="0"></div>
-                        <div><label class="text-sm">Daños a equipos/infraestructura:</label><input type="number" id="costoDaños" class="w-full border rounded p-1" value="0"></div>
-                        <div><label class="text-sm">Horas de investigación / personal:</label><input type="number" id="costoHoras" class="w-full border rounded p-1" value="0"></div>
-                        <div><label class="text-sm">Valor hora de investigación (COP):</label><input type="number" id="costoHoraValor" class="w-full border rounded p-1" value="30000"></div>
-                        <div><label class="text-sm">Multas o sanciones (si aplica):</label><input type="number" id="costoMultas" class="w-full border rounded p-1" value="0"></div>
-                        <div><label class="text-sm">Otros costos:</label><input type="number" id="costoOtros" class="w-full border rounded p-1" value="0"></div>
+                        <input type="number" id="costoIncapacidad" placeholder="Costo Incapacidad" class="border rounded p-1 text-sm">
+                        <input type="number" id="costoDanos" placeholder="Daños Materiales" class="border rounded p-1 text-sm">
                     </div>
-                    <button id="calcularCostoBtn" class="bg-blue-100 mt-3 px-4 py-1 rounded text-blue-800 text-sm w-full"><i class="fas fa-calculator"></i> Calcular costo total estimado</button>
-                    <div id="costoTotalResultado" class="mt-3 p-3 bg-gray-100 rounded font-bold text-center"></div>
                 </div>
             </div>
             <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Siguiente</button></div>
         </div>
 
-        <!-- PASO 5: PLAN DE ACCIÓN -->
         <div id="step5" class="step-content hidden p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tasks text-indigo-600 mr-2"></i>Paso 5: Plan de acción correctivo (acciones, responsables y fechas)</h2>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-tasks text-indigo-600 mr-2"></i>Paso 5: Plan de Acción</h2>
             <div id="accionesContainer" class="space-y-3 mb-4"></div>
-            <button id="addAccionBtn" class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg text-sm"><i class="fas fa-plus"></i> Agregar acción</button>
-            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Generar informe</button></div>
+            <button id="addAccionBtn" class="bg-gray-200 px-4 py-2 rounded-lg text-sm">+ Agregar Acción</button>
+            <div class="flex justify-between mt-6"><button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg">Atrás</button><button class="next-step bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">Generar Informe</button></div>
         </div>
 
-        <!-- PASO 6: INFORME FINAL -->
         <div id="step6" class="step-content hidden p-6 md:p-8">
-            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-file-alt text-red-600 mr-2"></i>Informe final de investigación</h2>
+            <h2 class="text-xl font-bold border-b pb-2 mb-4"><i class="fas fa-file-alt text-red-600 mr-2"></i>Informe Final de Investigación</h2>
             <div id="informeFinal" class="bg-gray-50 border rounded-lg p-5 text-sm space-y-4 overflow-auto max-h-[70vh]"></div>
-            <div class="flex flex-wrap gap-3 justify-between mt-6">
-                <button id="exportarBtn" class="bg-green-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-download"></i> Exportar a texto</button>
-                <button id="resetBtn" class="bg-red-600 text-white px-5 py-2 rounded-lg"><i class="fas fa-sync-alt"></i> Nueva investigación</button>
-                <button class="prev-step bg-gray-500 text-white px-5 py-2 rounded-lg"><i class="fas fa-edit"></i> Editar datos</button>
-            </div>
+            <div class="mt-6"><button id="resetBtn" class="bg-red-600 text-white px-5 py-2 rounded-lg">Nueva Investigación</button></div>
         </div>
     </div>
-    <div class="text-center text-xs text-gray-500 mt-4">Herramienta basada en Resolución 1401 de 2007, NTC 3701, Decreto 1072, metodología 5W2H (What, Where, When, Who, Why, How, How much).</div>
 </div>
 
 <script>
-    // ############################################################
-    // ESTADO GLOBAL
     let investigation = {
-        consecutivo: "", basico: { fecha: "", hora: "", lugar: "", trabajador: "", empresa: "", tipo: "", descripcion: "", consecuencias: "", what: "", whyHypothesis: "", whenDetected: "" },
+        empresa: {}, trabajador: {}, suceso: {},
         causasNTC: { actos: [], condiciones: [], factoresPersonales: [], factoresGestion: [] },
-        cincoPorques: ["", "", "", "", ""], fishbone: { Personas: [], Procedimientos: [], Equipos: [], Materiales: [], Entorno: [], Medicion: [] },
-        rootCause: "",
-        equipoInvestigador: [],
-        costos: { dias:0, diaValor:50000, medico:0, daños:0, horas:0, horaValor:30000, multas:0, otros:0, total:0 },
-        acciones: [],
-        raizExplicita: ""
+        cincoPorques: ["", "", "", "", ""], acciones: []
     };
     let currentStep = 1;
-    const categories = ["Personas", "Procedimientos", "Equipos", "Materiales", "Entorno", "Medicion"];
-    const categoryIcons = { Personas: "👥", Procedimientos: "📋", Equipos: "🛠️", Materiales: "📦", Entorno: "🌍", Medicion: "📊" };
-    const stepDivs = {1:document.getElementById("step1"),2:document.getElementById("step2"),3:document.getElementById("step3"),4:document.getElementById("step4"),5:document.getElementById("step5"),6:document.getElementById("step6")};
-    const stepIndicators = document.querySelectorAll(".step");
 
     function updateStepUI() {
-        for(let i=1;i<=6;i++) stepDivs[i].classList.add("hidden");
-        stepDivs[currentStep].classList.remove("hidden");
-        stepIndicators.forEach((el, idx) => { let num=idx+1; el.classList.remove("active","completed"); if(num===currentStep) el.classList.add("active"); else if(num<currentStep) el.classList.add("completed"); });
-        if(currentStep===2) cargarSeleccionesPreviasNTC();
-        if(currentStep===3) { renderFishbone(); render5PorquesUI(); }
-        if(currentStep===5) renderAcciones();
-        if(currentStep===6) mostrarInforme();
-    }
-
-    // --------------------------------------------------------------
-    // Helper: obtener selecciones de listas NTC 3701
-    function cargarSeleccionesPreviasNTC() {
-        // Seleccionar elementos previamente guardados (sincronizar UI)
-        document.querySelectorAll("#actosList li, #condicionesList li, #factoresPersonalesList li, #factoresGestionList li").forEach(li => {
-            li.classList.remove("selected");
-            let valor = li.getAttribute("data-value");
-            if(investigation.causasNTC.actos.includes(valor) || investigation.causasNTC.condiciones.includes(valor) || investigation.causasNTC.factoresPersonales.includes(valor) || investigation.causasNTC.factoresGestion.includes(valor)) {
-                li.classList.add("selected");
-            }
+        document.querySelectorAll(".step-content").forEach(el => el.classList.add("hidden"));
+        document.getElementById(`step${currentStep}`).classList.remove("hidden");
+        document.querySelectorAll(".step").forEach((el, idx) => {
+            el.classList.toggle("active", idx + 1 === currentStep);
+            el.classList.toggle("completed", idx + 1 < currentStep);
         });
+        if(currentStep === 3) render5Porques();
+        if(currentStep === 6) generarInforme();
     }
 
-    function attachNTCSelection() {
-        function setupList(selector, targetArray, otherInputId=null) {
-            document.querySelectorAll(selector).forEach(li => {
-                li.addEventListener("click", () => {
-                    li.classList.toggle("selected");
-                    const value = li.getAttribute("data-value");
-                    if(targetArray.includes(value)) targetArray.splice(targetArray.indexOf(value),1);
-                    else targetArray.push(value);
-                    if(otherInputId && value==="Otro") document.getElementById(otherInputId).focus();
-                });
-            });
-        }
-        setupList("#actosList li", investigation.causasNTC.actos, "actoOtro");
-        setupList("#condicionesList li", investigation.causasNTC.condiciones, "condicionOtro");
-        setupList("#factoresPersonalesList li", investigation.causasNTC.factoresPersonales);
-        setupList("#factoresGestionList li", investigation.causasNTC.factoresGestion);
-        document.getElementById("actoOtro")?.addEventListener("change", function(){ if(this.value.trim()) investigation.causasNTC.actos.push(`Otro: ${this.value}`); });
-        document.getElementById("condicionOtro")?.addEventListener("change", function(){ if(this.value.trim()) investigation.causasNTC.condiciones.push(`Otro: ${this.value}`); });
-    }
-
-    // Guardar pasos
-    function saveStep1() {
-        investigation.consecutivo = document.getElementById("consecutivo").value;
-        investigation.basico = {
-            fecha: document.getElementById("fechaAcc").value, hora: document.getElementById("horaAcc").value, lugar: document.getElementById("lugar").value,
-            trabajador: document.getElementById("trabajador").value, empresa: document.getElementById("empresa").value,
-            tipo: document.getElementById("tipoSuceso").value, descripcion: document.getElementById("descripcionAcc").value,
-            consecuencias: document.getElementById("consecuencias").value, what: document.getElementById("whatHappened").value,
-            whyHypothesis: document.getElementById("whyHypothesis").value, whenDetected: document.getElementById("whenDetected").value
-        };
-        if(!investigation.basico.fecha || !investigation.basico.descripcion) { Swal.fire("Datos incompletos","Fecha y descripción son obligatorias","warning"); return false; }
-        return true;
-    }
-    function saveStep2() {
-        // ya se guarda en tiempo real, pero guardamos adicional el texto de otros
-        let otroActo = document.getElementById("actoOtro")?.value.trim(); if(otroActo && !investigation.causasNTC.actos.includes(`Otro: ${otroActo}`)) investigation.causasNTC.actos.push(`Otro: ${otroActo}`);
-        let otroCond = document.getElementById("condicionOtro")?.value.trim(); if(otroCond && !investigation.causasNTC.condiciones.includes(`Otro: ${otroCond}`)) investigation.causasNTC.condiciones.push(`Otro: ${otroCond}`);
-        return true;
-    }
-    function saveStep4() {
-        let equipo = Array.from(document.querySelectorAll("#equipoList input:checked")).map(cb => cb.value);
-        if(document.getElementById("otroEquipo").value.trim()) equipo.push(`Otro: ${document.getElementById("otroEquipo").value.trim()}`);
-        investigation.equipoInvestigador = equipo;
-        investigation.costos = { dias:parseInt(document.getElementById("costoDias").value)||0, diaValor:parseInt(document.getElementById("costoDiaValor").value)||0,
-            medico:parseInt(document.getElementById("costoMedico").value)||0, daños:parseInt(document.getElementById("costoDaños").value)||0,
-            horas:parseInt(document.getElementById("costoHoras").value)||0, horaValor:parseInt(document.getElementById("costoHoraValor").value)||0,
-            multas:parseInt(document.getElementById("costoMultas").value)||0, otros:parseInt(document.getElementById("costoOtros").value)||0, total:0 };
-        investigation.costos.total = (investigation.costos.dias * investigation.costos.diaValor) + investigation.costos.medico + investigation.costos.daños +
-            (investigation.costos.horas * investigation.costos.horaValor) + investigation.costos.multas + investigation.costos.otros;
-        document.getElementById("costoTotalResultado").innerHTML = `💰 Costo total estimado del accidente: $ ${investigation.costos.total.toLocaleString()} COP`;
-        return true;
-    }
-    function saveStep5(){ return true; }
-
-    // --------------------- Espina de pescado -------------------------
-    function renderFishbone() {
-        const container = document.getElementById("fishboneContainer");
-        if(!container) return;
-        container.innerHTML = "";
-        for(let cat of categories) {
-            let causes = investigation.fishbone[cat];
-            const div = document.createElement("div");
-            div.className = "bg-gray-50 rounded p-2 border";
-            div.innerHTML = `<div class="flex justify-between"><span class="font-bold">${categoryIcons[cat]} ${cat}</span><button class="addFishCause text-blue-600 text-xs" data-cat="${cat}">+Agregar</button></div>
-                <div id="fish-${cat}" class="text-xs space-y-1 mt-1">${causes.map(c=>`<div class="flex justify-between bg-white p-1 rounded"><span>${escapeHtml(c)}</span><button class="removeFish text-red-400" data-cat="${cat}" data-cause="${c}">🗑</button></div>`).join('')}</div>
-                <input type="text" id="newFish-${cat}" class="w-full border text-xs mt-1 p-1" placeholder="Escriba causa...">`;
-            container.appendChild(div);
-        }
-        document.querySelectorAll(".addFishCause").forEach(btn => btn.addEventListener("click", (e) => {
-            let cat = btn.getAttribute("data-cat");
-            let input = document.getElementById(`newFish-${cat}`);
-            if(input.value.trim()) { investigation.fishbone[cat].push(input.value.trim()); input.value=""; renderFishbone(); }
-        }));
-        document.querySelectorAll(".removeFish").forEach(btn => btn.addEventListener("click", (e) => {
-            let cat = btn.getAttribute("data-cat");
-            let cause = btn.getAttribute("data-cause");
-            investigation.fishbone[cat] = investigation.fishbone[cat].filter(c => c !== cause);
-            renderFishbone();
+    function render5Porques() {
+        const container = document.getElementById("porquesContainer");
+        container.innerHTML = investigation.cincoPorques.map((v, i) => `
+            <div><label class="text-xs">${i+1}° ¿Por qué?</label>
+            <input type="text" class="w-full border rounded p-1 text-sm why-input" data-idx="${i}" value="${v}"></div>
+        `).join('');
+        document.querySelectorAll(".why-input").forEach(el => el.addEventListener("change", e => {
+            investigation.cincoPorques[e.target.dataset.idx] = e.target.value;
         }));
     }
 
-    // 5 Porqués
-    function render5PorquesUI() {
-        let html = "";
-        for(let i=1;i<=5;i++) html += `<div><label class="text-sm">${i}° ¿Por qué?</label><textarea id="why${i}" rows="2" class="w-full border rounded p-1 text-sm">${investigation.cincoPorques[i-1]}</textarea></div>`;
-        document.getElementById("porquesContainer").innerHTML = html;
-        for(let i=1;i<=5;i++) document.getElementById(`why${i}`).addEventListener("input", (e) => { investigation.cincoPorques[i-1]=e.target.value; });
-    }
-    function generarRaizPorques() {
-        if(!investigation.cincoPorques[4] || investigation.cincoPorques[4].trim()==="") Swal.fire("Incompleto","Responda el quinto porqué","warning");
-        else { investigation.rootCause = investigation.cincoPorques[4]; document.getElementById("raizResultado").innerHTML = `✅ Causa raíz identificada: ${investigation.rootCause}`; document.getElementById("raizResultado").classList.remove("hidden"); }
-    }
-
-    // Acciones
-    function renderAcciones() {
-        const container = document.getElementById("accionesContainer");
-        container.innerHTML = "";
-        investigation.acciones.forEach((a,idx) => {
-            const div = document.createElement("div"); div.className = "flex gap-2 items-center bg-gray-100 p-2 rounded";
-            div.innerHTML = `<input type="text" placeholder="Acción" value="${escapeHtml(a.descripcion)}" class="flex-1 border rounded p-1 acc-desc-${idx}">
-                <input type="text" placeholder="Responsable" value="${escapeHtml(a.responsable)}" class="w-32 border rounded p-1 acc-resp-${idx}">
-                <input type="date" value="${a.fecha}" class="w-36 border rounded p-1 acc-fecha-${idx}">
-                <button class="removeAccion text-red-600" data-idx="${idx}"><i class="fas fa-trash-alt"></i></button>`;
-            container.appendChild(div);
-        });
-        investigation.acciones.forEach((_,idx) => {
-            document.querySelector(`.acc-desc-${idx}`)?.addEventListener("change", e => investigation.acciones[idx].descripcion = e.target.value);
-            document.querySelector(`.acc-resp-${idx}`)?.addEventListener("change", e => investigation.acciones[idx].responsable = e.target.value);
-            document.querySelector(`.acc-fecha-${idx}`)?.addEventListener("change", e => investigation.acciones[idx].fecha = e.target.value);
-        });
-        document.querySelectorAll(".removeAccion").forEach(btn => btn.addEventListener("click", e => { investigation.acciones.splice(parseInt(btn.getAttribute("data-idx")),1); renderAcciones(); }));
-    }
-
-    // INFORME FINAL (integrando los nuevos elementos)
-    function generarInformeHTML() {
-        const b = investigation.basico;
-        const dentroPlazo = (() => { if(!b.fecha) return "No verificado"; const diff = (new Date()-new Date(b.fecha))/(1000*3600*24); return diff <=15 ? "✔️ Dentro del plazo (≤15 días Res 1401)" : "⚠️ FUERA DE PLAZO"; })();
-        let causasNTC = `<strong>Causas inmediatas:</strong> Actos subestándar: ${investigation.causasNTC.actos.join(", ") || "Ninguno"}<br>Condiciones subestándar: ${investigation.causasNTC.condiciones.join(", ") || "Ninguna"}<br>
-                         <strong>Causas básicas NTC 3701:</strong> Factores personales: ${investigation.causasNTC.factoresPersonales.join(", ")} - Factores gestión: ${investigation.causasNTC.factoresGestion.join(", ")}`;
-        let equipoHtml = `<strong>Equipo investigador (Res 1401):</strong><ul>${investigation.equipoInvestigador.map(m=>`<li>${m}</li>`).join("")}</ul>`;
-        let costosHtml = `<strong>💰 Costos del accidente (How Much):</strong><br>Incapacidad: $${(investigation.costos.dias * investigation.costos.diaValor).toLocaleString()}<br>Gastos médicos: $${investigation.costos.medico.toLocaleString()}<br>Daños materiales: $${investigation.costos.daños.toLocaleString()}<br>Investigación: $${(investigation.costos.horas * investigation.costos.horaValor).toLocaleString()}<br>Multas: $${investigation.costos.multas.toLocaleString()}<br>Otros: $${investigation.costos.otros.toLocaleString()}<br><span class="font-bold">TOTAL: $${investigation.costos.total.toLocaleString()} COP</span>`;
-        let fiveWhy = investigation.cincoPorques.map((p,i)=>`${i+1}°: ${p}`);
-        return `
-            <div class="border-l-8 border-blue-700 pl-4 space-y-3">
-                <div><strong>Consecutivo:</strong> ${investigation.consecutivo}<br><strong>5W2H</strong> - What: ${b.what} | Where: ${b.lugar} | When: ${b.fecha} ${b.hora} | Who: ${b.trabajador} | Why (hipótesis): ${b.whyHypothesis} | How: ${b.descripcion} | How Much: Ver costos.</div>
-                <div><strong>Descripción del evento:</strong> ${b.descripcion}</div>
-                <div>${causasNTC}</div>
-                <div><strong>Análisis causa raíz (5 Porqués):</strong><br>${fiveWhy.join('<br>')}<br><strong>Causa raíz final:</strong> ${investigation.rootCause || "No generada, use botón en paso 3."}</div>
-                <div>${equipoHtml}</div>
-                <div>${costosHtml}</div>
-                <div><strong>Plan de acción:</strong><ul>${investigation.acciones.map(a=>`<li>📌 ${a.descripcion} – Resp: ${a.responsable} – Fecha: ${a.fecha}</li>`).join("")}</ul></div>
-                <div><strong>⚖️ Veredicto y orientación:</strong> El accidente fue PREVENIBLE. Se recomienda implementar las acciones correctivas, ajustar la gestión de riesgos según hallazgos NTC 3701 y socializar el informe con todos los trabajadores y contratistas.</div>
-                <div class="text-xs text-gray-500">${dentroPlazo} – Fecha del informe: ${new Date().toLocaleDateString()} – Cumple Resolución 1401/2007, NTC 3701 y estándares SG-SST.</div>
-            </div>
+    function generarInforme() {
+        const b = investigation;
+        const plazo = (new Date() - new Date(document.getElementById("fechaAcc").value)) / (1000*3600*24) <= 15;
+        document.getElementById("informeFinal").innerHTML = `
+            <div class='border-b pb-2 mb-2'><strong>IDENTIFICACIÓN:</strong> ${document.getElementById("empresa").value} - NIT: ${document.getElementById("nitEmpresa").value}</div>
+            <div><strong>TRABAJADOR:</strong> ${document.getElementById("trabajador").value} (${document.getElementById("cedulaTrabajador").value}) - Cargo: ${document.getElementById("cargoTrabajador").value}</div>
+            <div><strong>SUCESO:</strong> ${document.getElementById("fechaAcc").value} ${document.getElementById("horaAcc").value} en ${document.getElementById("lugar").value}</div>
+            <div><strong>SITIO:</strong> ${document.getElementById("sitioLugar").value} | <strong>AGENTE:</strong> ${document.getElementById("agenteAcc").value}</div>
+            <div class='p-2 bg-yellow-50 mt-2'><strong>CAUSA RAÍZ:</strong> ${document.getElementById("causaRaizDefinitiva").value}</div>
+            <div class='mt-2 text-xs'>${plazo ? "✔️ Dentro de plazo legal" : "⚠️ REPORTE FUERA DE PLAZO (Más de 15 días)"}</div>
         `;
     }
-    function mostrarInforme() { document.getElementById("informeFinal").innerHTML = generarInformeHTML(); }
-    function exportarInforme() { const blob = new Blob([document.getElementById("informeFinal").innerText], {type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`investigacion_${investigation.consecutivo}.txt`; a.click(); URL.revokeObjectURL(a.href); Swal.fire("Exportado","Informe descargado","success"); }
 
-    // Navegación
-    function init() {
-        // Prellenar datos ejemplo
-        document.getElementById("fechaAcc").value = "2026-04-10"; document.getElementById("horaAcc").value = "09:30";
-        document.getElementById("lugar").value = "Cuarto de bombas"; document.getElementById("trabajador").value = "Carlos Pérez - Técnico";
-        document.getElementById("descripcionAcc").value = "Cortada en mano por no usar procedimiento LOTO";
-        document.getElementById("whatHappened").value = "Cortada profunda en mano derecha durante mantenimiento de válvula";
-        investigation.cincoPorques = ["No existía procedimiento de bloqueo","La copropiedad no exigió el protocolo al contratista","Contrato no incluía cláusulas SST","Administración no supervisa","Falta cultura preventiva y recursos asignados"];
-        investigation.fishbone = { Personas: ["Falta entrenamiento"], Procedimientos: ["Sin permiso"], Equipos: ["Herramienta inadecuada"], Materiales: [], Entorno: ["Iluminación baja"], Medicion: [] };
-        investigation.acciones = [{ descripcion:"Implementar permiso de trabajo", responsable:"Administrador", fecha:"2026-06-01" }];
-        attachNTCSelection();
-        document.getElementById("calcularCostoBtn")?.addEventListener("click", () => { saveStep4(); Swal.fire("Costo calculado",`Total: $${investigation.costos.total.toLocaleString()} COP`,"success"); });
-        document.getElementById("btnGenerarRaizPorques")?.addEventListener("click", generarRaizPorques);
-        document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => { let ok=true; if(currentStep===1) ok=saveStep1(); else if(currentStep===2) ok=saveStep2(); else if(currentStep===4) ok=saveStep4(); if(ok && currentStep<6) { currentStep++; updateStepUI(); } }));
-        document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => { if(currentStep>1) { currentStep--; updateStepUI(); } }));
-        stepIndicators.forEach(ind => ind.addEventListener("click", () => { let t=parseInt(ind.getAttribute("data-step")); if(t>currentStep) Swal.fire("Siga el orden","Complete pasos anteriores","info"); else { currentStep=t; updateStepUI(); } }));
-        document.getElementById("addAccionBtn")?.addEventListener("click", () => { investigation.acciones.push({descripcion:"",responsable:"",fecha:""}); renderAcciones(); });
-        document.getElementById("exportarBtn")?.addEventListener("click", exportarInforme);
-        document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("¿Reiniciar?")) location.reload(); });
-        updateStepUI();
-    }
-    function escapeHtml(s) { if(!s) return ""; return s.replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
-    init();
+    document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => { currentStep++; updateStepUI(); }));
+    document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => { currentStep--; updateStepUI(); }));
+    document.querySelectorAll(".ntc-list li").forEach(li => li.addEventListener("click", () => li.classList.toggle("selected")));
+    document.getElementById("btnGenerarRaizPorques").addEventListener("click", () => {
+        const raiz = investigation.cincoPorques[4];
+        if(raiz) { 
+            document.getElementById("raizResultado").innerText = "Raíz: " + raiz;
+            document.getElementById("raizResultado").classList.remove("hidden");
+            document.getElementById("causaRaizDefinitiva").value = raiz;
+        }
+    });
 </script>
 </body>
 </html>
